@@ -189,12 +189,27 @@ function BadgeEl({ type }: { type: string }) {
 }
 
 function StatusChip({ s }: { s: string }) {
-  const cls: Record<string, string> = {
+  // Map English enum value to Japanese label and CSS class
+  const statusLabels: Record<string, string> = {
+    recruiting: "募集中", matching: "マッチング中", contracted: "成立済み",
+    in_progress: "進行中", completed: "完了", cancelled: "キャンセル",
+    // Also accept Japanese labels (for backward compat with hardcoded mock data)
+    "募集中": "募集中", "マッチング中": "マッチング中", "成立済み": "成立済み",
+  };
+  const clsMap: Record<string, string> = {
+    recruiting: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+    matching: "bg-blue-50 text-blue-700 border border-blue-200",
+    contracted: "bg-gray-100 text-gray-500 border border-gray-200",
+    in_progress: "bg-violet-50 text-violet-700 border border-violet-200",
+    completed: "bg-gray-100 text-gray-500 border border-gray-200",
+    cancelled: "bg-red-50 text-red-500 border border-red-200",
     "募集中": "bg-emerald-50 text-emerald-700 border border-emerald-200",
     "マッチング中": "bg-blue-50 text-blue-700 border border-blue-200",
     "成立済み": "bg-gray-100 text-gray-500 border border-gray-200",
   };
-  return <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${cls[s] || ""}`}>{s}</span>;
+  const label = statusLabels[s] || s;
+  const cls = clsMap[s] || "";
+  return <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${cls}`}>{label}</span>;
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
@@ -1248,7 +1263,7 @@ function CreatorProjectsPage() {
             <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-700 flex items-center gap-2 font-medium">
               <CheckCircle size={15} /> 提案を送りました。クライアントからの返信をお待ちください。
             </div>
-          ) : detail.status === "成立済み" ? (
+          ) : (detail.status === "成立済み" || detail.status === "contracted") ? (
             <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-400 text-center">この案件は成立済みです</div>
           ) : (
             <div className="space-y-3">
@@ -1281,7 +1296,7 @@ function CreatorProjectsPage() {
       </div>
       <div className="space-y-3">
         {filtered.map(p => (
-          <div key={p.id} className={`bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-gray-300 transition-all cursor-pointer shadow-sm ${p.status === "成立済み" ? "opacity-60" : ""}`}
+          <div key={p.id} className={`bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-gray-300 transition-all cursor-pointer shadow-sm ${(p.status === "成立済み" || p.status === "contracted") ? "opacity-60" : ""}`}
             onClick={() => setDetail(p)}>
             <div className="flex items-start justify-between mb-2">
               <div>

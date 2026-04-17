@@ -105,7 +105,7 @@ export type Database = {
           description: string | null
           style: string | null
           pro_select: boolean
-          status: '募集中' | 'マッチング中' | '成立済み' | '進行中' | '完了' | 'キャンセル'
+          status: 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
           view_count: number
           proposal_count: number
           created_at: string
@@ -122,7 +122,7 @@ export type Database = {
           description?: string | null
           style?: string | null
           pro_select?: boolean
-          status?: '募集中' | 'マッチング中' | '成立済み' | '進行中' | '完了' | 'キャンセル'
+          status?: 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
           view_count?: number
           proposal_count?: number
           created_at?: string
@@ -139,7 +139,7 @@ export type Database = {
           description?: string | null
           style?: string | null
           pro_select?: boolean
-          status?: '募集中' | 'マッチング中' | '成立済み' | '進行中' | '完了' | 'キャンセル'
+          status?: 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
           view_count?: number
           proposal_count?: number
           created_at?: string
@@ -501,6 +501,26 @@ export type Favorite = Database['public']['Tables']['favorites']['Row']
 
 // Enum type aliases
 export type UserRole = 'client' | 'creator' | 'admin'
-export type ProjectStatus = '募集中' | 'マッチング中' | '成立済み' | '進行中' | '完了' | 'キャンセル'
+export type ProjectStatus = 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
+
+// UI display mapping (English DB enum → Japanese UI label)
+export const projectStatusLabel: Record<ProjectStatus, string> = {
+  recruiting: '募集中',
+  matching: 'マッチング中',
+  contracted: '成立済み',
+  in_progress: '進行中',
+  completed: '完了',
+  cancelled: 'キャンセル',
+}
+
+// Reverse mapping (Japanese UI label → English DB enum)
+export const projectStatusFromLabel: Record<string, ProjectStatus> = {
+  '募集中': 'recruiting',
+  'マッチング中': 'matching',
+  '成立済み': 'contracted',
+  '進行中': 'in_progress',
+  '完了': 'completed',
+  'キャンセル': 'cancelled',
+}
 export type ProposalStatus = 'pending' | 'accepted' | 'rejected'
 export type NotificationType = 'proposal' | 'message' | 'match' | 'review' | 'system'

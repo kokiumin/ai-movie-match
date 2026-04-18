@@ -6,12 +6,16 @@ import {
   formatRate,
   RANK_CONFIG,
 } from "@/lib/rank";
-import { RankBadge } from "./RankBadge";
+import { RankBadge } from "@/components/creators/RankBadge";
 
 interface RankDashboardProps {
   creatorId: string;
 }
 
+/**
+ * CreatorMyPage の Overview タブ最上部に表示するランク・手数料ダッシュボード。
+ * 現在のランク・手数料率・次ランクまでの進捗バー・ランク履歴 を1枚のカードにまとめる。
+ */
 export function RankDashboard({ creatorId }: RankDashboardProps) {
   const { info, history, loading } = useCreatorRank(creatorId);
 
@@ -34,7 +38,7 @@ export function RankDashboard({ creatorId }: RankDashboardProps) {
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-      {/* ヘッダー */}
+      {/* ヘッダー: ランク + 手数料率 */}
       <div className={`p-5 border-b border-gray-100 ${meta.bgColor}`}>
         <div className="flex items-center justify-between">
           <div>
@@ -51,7 +55,7 @@ export function RankDashboard({ creatorId }: RankDashboardProps) {
         <p className="text-xs text-gray-600 mt-2">{meta.description}</p>
       </div>
 
-      {/* 実績 */}
+      {/* 実績サマリー */}
       <div className="grid grid-cols-3 border-b border-gray-100">
         <div className="p-4 border-r border-gray-100">
           <div className="text-xs text-gray-500 font-semibold mb-1">30日売上</div>
@@ -108,9 +112,7 @@ export function RankDashboard({ creatorId }: RankDashboardProps) {
               );
             })}
           </div>
-          <p className="text-xs text-gray-500 mt-3">
-            いずれかの条件を満たすとランクアップ
-          </p>
+          <p className="text-xs text-gray-500 mt-3">いずれかの条件を満たすとランクアップ</p>
         </div>
       )}
 
@@ -123,10 +125,7 @@ export function RankDashboard({ creatorId }: RankDashboardProps) {
           </div>
           <ul className="space-y-2">
             {history.slice(0, 5).map((h) => (
-              <li
-                key={h.id}
-                className="flex items-center gap-2 text-xs text-gray-700"
-              >
+              <li key={h.id} className="flex items-center gap-2 text-xs text-gray-700">
                 <span className="text-gray-400">
                   {new Date(h.created_at ?? "").toLocaleDateString("ja-JP")}
                 </span>

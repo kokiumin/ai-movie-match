@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
   const { data: creators, error: cerr } = await supabase
     .from("profiles")
     .select("id, rank, completed_orders")
-    .eq("user_role", "creator");
+    .eq("role", "creator");
 
   if (cerr) {
     return new Response(JSON.stringify({ error: cerr.message }), {

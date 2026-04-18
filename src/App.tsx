@@ -29,13 +29,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import {
   Search, Star, CheckCircle, Heart, ChevronDown, ChevronRight,
-  Play, Send, Bell, User, SlidersHorizontal,
+  Play, Send, Bell, SlidersHorizontal,
   TrendingUp, Users, Briefcase, CircleDollarSign, Eye,
   MessageSquare, Video, ArrowRight,
   Shield, Clock, Award, Sparkles, Pencil,
   ChevronLeft, Camera, CreditCard, AlertCircle,
   Building, ExternalLink, Lock,
-  Zap, DollarSign, X, FileText, MessageCircle,
+  FileText, MessageCircle,
 } from "lucide-react";
 
 type Role = "client" | "creator";
@@ -1707,15 +1707,13 @@ export default function App() {
   const [clientPage, setClientPage] = useState<"creators" | "post" | "match" | "messages" | "admin">("creators");
   const [creatorPage, setCreatorPage] = useState<"projects" | "messages" | "mypage">("projects");
   const [postDone, setPostDone] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
   const [legalPage, setLegalPage] = useState<"terms" | "privacy" | null>(null);
 
   // Use auth-based role when available, fallback to local state
   const effectiveRole: Role = (!isDemo && profile?.role === "creator") ? "creator" : role;
 
-  const { notifications: notifs, unreadCount: unreadNotifications } = useNotifications(user?.id);
+  const { unreadCount: unreadNotifications } = useNotifications(user?.id);
   const { threads: msgThreads } = useMessages(user?.id);
   const unreadMessages = msgThreads.reduce((acc, t) => acc + t.unread, 0);
 

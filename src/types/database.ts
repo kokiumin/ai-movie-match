@@ -125,7 +125,7 @@ export type Database = {
           proposal_count: number
           completed_at: string | null
           payout_status: 'pending' | 'paid' | 'refunded' | 'disputed'
-          payout_paid_at: string | null
+          payout_completed_at: string | null
           client_approved_at: string | null
           auto_approval_deadline: string | null
           cancelled_at: string | null
@@ -151,7 +151,7 @@ export type Database = {
           proposal_count?: number
           completed_at?: string | null
           payout_status?: 'pending' | 'paid' | 'refunded' | 'disputed'
-          payout_paid_at?: string | null
+          payout_completed_at?: string | null
           client_approved_at?: string | null
           auto_approval_deadline?: string | null
           cancelled_at?: string | null
@@ -177,7 +177,7 @@ export type Database = {
           proposal_count?: number
           completed_at?: string | null
           payout_status?: 'pending' | 'paid' | 'refunded' | 'disputed'
-          payout_paid_at?: string | null
+          payout_completed_at?: string | null
           client_approved_at?: string | null
           auto_approval_deadline?: string | null
           cancelled_at?: string | null

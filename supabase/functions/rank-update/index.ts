@@ -1,9 +1,18 @@
 // Supabase Edge Function: クリエイターランク日次再判定バッチ
 //
-// 完了案件 (projects.status = 'completed') の proposals.price を
-// 直近 30日 / 90日で集計し、各クリエイターのランクを再判定する。
+// 「成約」として計上する条件 (migration 003 で定義):
+//   1. project.status = 'completed'
+//   2. AND payout_status = 'paid'
+//   3. AND (client_approved_at IS NOT NULL OR auto_approval_deadline <= now())
+//   4. AND cancelled_at IS NULL AND refunded_at IS NULL
+//
+// 上記を満たす案件の proposals.price を直近30日/90日で集計し、
+// 各クリエイターのランクを再判定する。
 // 変更があった場合のみ profiles を更新し、creator_rank_history に記録、
 // notifications にランクアップ通知を挿入する。
+//
+// completed_orders は trigger 側でリアルタイム更新されるため、このバッチでは
+// 売上集計と rank 判定のみを担当する。
 //
 // 実行方法: pg_cron から `select net.http_post(...)` で毎日呼び出す、
 // あるいは Supabase Scheduled Triggers で日次実行。
@@ -86,27 +95,51 @@ Deno.serve(async (req) => {
     changed: boolean;
   }> = [];
 
+  const nowIso = now.toISOString();
+
   for (const creator of creators ?? []) {
-    // 30日 / 90日の完了案件売上を集計
-    // proposals.creator_id で採用された案件のうち、project.completed_at が期間内
-    const { data: earnings30 } = await supabase
+    // 採用された proposal + project 本体を取得
+    // qualified 判定はクライアント側で行う (auto_approval_deadline の now() 比較を含むため)
+    const { data: rows } = await supabase
       .from("proposals")
-      .select("price, projects!inner(status, completed_at)")
+      .select(
+        "price, projects!inner(status, completed_at, payout_status, client_approved_at, auto_approval_deadline, cancelled_at, refunded_at)",
+      )
       .eq("creator_id", creator.id)
       .eq("status", "accepted")
       .eq("projects.status", "completed")
-      .gte("projects.completed_at", d30);
+      .eq("projects.payout_status", "paid");
 
-    const { data: earnings90 } = await supabase
-      .from("proposals")
-      .select("price, projects!inner(status, completed_at)")
-      .eq("creator_id", creator.id)
-      .eq("status", "accepted")
-      .eq("projects.status", "completed")
-      .gte("projects.completed_at", d90);
+    const qualified = (rows ?? []).filter((r: any) => {
+      const p = r.projects;
+      if (!p) return false;
+      if (p.cancelled_at || p.refunded_at) return false;
+      const approved =
+        p.client_approved_at != null ||
+        (p.auto_approval_deadline != null && p.auto_approval_deadline <= nowIso);
+      return approved;
+    });
 
-    const e30 = (earnings30 ?? []).reduce((s, r: any) => s + (r.price ?? 0), 0);
-    const e90 = (earnings90 ?? []).reduce((s, r: any) => s + (r.price ?? 0), 0);
+    // 売上計上の基準日: client_approved_at ?? auto_approval_deadline ?? completed_at
+    // (payment は検収後に確定するので「検収確定日」ベースで集計)
+    const qualifiedAt = (r: any): string | null => {
+      const p = r.projects;
+      return p.client_approved_at ?? p.auto_approval_deadline ?? p.completed_at ?? null;
+    };
+
+    const e30 = qualified
+      .filter((r: any) => {
+        const t = qualifiedAt(r);
+        return t != null && t >= d30;
+      })
+      .reduce((s: number, r: any) => s + (r.price ?? 0), 0);
+
+    const e90 = qualified
+      .filter((r: any) => {
+        const t = qualifiedAt(r);
+        return t != null && t >= d90;
+      })
+      .reduce((s: number, r: any) => s + (r.price ?? 0), 0);
 
     const stats = {
       total_earnings_30d: e30,

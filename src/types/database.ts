@@ -123,6 +123,15 @@ export type Database = {
           status: 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
           view_count: number
           proposal_count: number
+          completed_at: string | null
+          payout_status: 'pending' | 'paid' | 'refunded' | 'disputed'
+          payout_paid_at: string | null
+          client_approved_at: string | null
+          auto_approval_deadline: string | null
+          cancelled_at: string | null
+          refunded_at: string | null
+          disputed_at: string | null
+          dispute_resolved_at: string | null
           created_at: string
           updated_at: string
         }
@@ -140,6 +149,15 @@ export type Database = {
           status?: 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
           view_count?: number
           proposal_count?: number
+          completed_at?: string | null
+          payout_status?: 'pending' | 'paid' | 'refunded' | 'disputed'
+          payout_paid_at?: string | null
+          client_approved_at?: string | null
+          auto_approval_deadline?: string | null
+          cancelled_at?: string | null
+          refunded_at?: string | null
+          disputed_at?: string | null
+          dispute_resolved_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -157,6 +175,15 @@ export type Database = {
           status?: 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
           view_count?: number
           proposal_count?: number
+          completed_at?: string | null
+          payout_status?: 'pending' | 'paid' | 'refunded' | 'disputed'
+          payout_paid_at?: string | null
+          client_approved_at?: string | null
+          auto_approval_deadline?: string | null
+          cancelled_at?: string | null
+          refunded_at?: string | null
+          disputed_at?: string | null
+          dispute_resolved_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -605,6 +632,7 @@ export type ClientCreatorRelation = Database['public']['Tables']['client_creator
 // Enum type aliases
 export type UserRole = 'client' | 'creator' | 'admin'
 export type CreatorRank = 'starter' | 'regular' | 'pro' | 'elite'
+export type PayoutStatus = 'pending' | 'paid' | 'refunded' | 'disputed'
 export type ProjectStatus = 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
 
 // UI display mapping (English DB enum → Japanese UI label)

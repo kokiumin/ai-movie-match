@@ -1,17 +1,20 @@
 /**
  * Claude API integration for AI-powered matching automation.
  *
- * In production, these calls should move to Supabase Edge Functions
- * to keep the API key server-side. For MVP, we call directly from
- * the browser (key is exposed via VITE_ prefix).
+ * Calls go through Supabase Edge Function (/functions/v1/ai) which keeps
+ * the API key server-side. The frontend never sees ANTHROPIC_API_KEY.
  */
 
-const ANTHROPIC_API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
-const API_URL = "https://api.anthropic.com/v1/messages";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const AI_PROXY_URL = SUPABASE_URL ? `${SUPABASE_URL}/functions/v1/ai` : "";
 
-export const isAIConfigured = () => !!ANTHROPIC_API_KEY;
+export const isAIConfigured = () =>
+  !!SUPABASE_URL &&
+  !!SUPABASE_ANON_KEY &&
+  SUPABASE_URL !== "https://YOUR_PROJECT.supabase.co";
 
-// ─── Low-level API call ─────────────────────────────────────────────────────
+// ─── Low-level API call (via Edge Function proxy) ────────────────────────────
 
 interface ClaudeMessage {
   role: "user" | "assistant";
@@ -23,17 +26,18 @@ async function callClaude(
   messages: ClaudeMessage[],
   options?: { maxTokens?: number; temperature?: number }
 ): Promise<string> {
-  if (!ANTHROPIC_API_KEY) {
-    throw new Error("VITE_ANTHROPIC_API_KEY is not set");
+  if (!isAIConfigured()) {
+    throw new Error("Supabase is not configured");
   }
 
-  const res = await fetch(API_URL, {
+  const res = await fetch(AI_PROXY_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": ANTHROPIC_API_KEY,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true",
+      // Anon key is required by Supabase to reach the function's public gateway.
+      // The real Anthropic API key lives only as a Function Secret on the server.
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
     },
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
@@ -46,7 +50,7 @@ async function callClaude(
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Claude API error (${res.status}): ${err}`);
+    throw new Error(`AI proxy error (${res.status}): ${err}`);
   }
 
   const data = await res.json();

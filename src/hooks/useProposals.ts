@@ -44,6 +44,7 @@ export function useProposals(projectId?: string) {
         price: data.price ?? null,
         delivery_days: data.delivery_days ?? null,
         status: "pending",
+        tools_used: null,
         created_at: new Date().toISOString(),
       };
       setProposals(prev => [mock, ...prev]);

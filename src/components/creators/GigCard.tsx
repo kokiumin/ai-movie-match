@@ -1,6 +1,8 @@
 import { Star, Heart, Play, Shield, Award } from "lucide-react";
 import { useState } from "react";
 import type { Profile } from "@/types/database";
+import { isNewCreator, getScoreGrade } from "@/lib/score";
+import { BadgeShowcase } from "./BadgeShowcase";
 
 interface GigCardProps {
   creator: Profile;
@@ -77,12 +79,29 @@ export function GigCard({ creator: c, onClick }: GigCardProps) {
         {title}
       </p>
 
-      {/* Rating */}
-      <div className="flex items-center gap-1 mb-3">
-        <Star size={13} className="fill-gray-900 text-gray-900" />
-        <span className="font-bold text-sm text-gray-900">{c.rating?.toFixed(1)}</span>
-        <span className="text-sm text-gray-500">({c.review_count})</span>
+      {/* Rating + Score */}
+      <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-1">
+          <Star size={13} className="fill-gray-900 text-gray-900" />
+          <span className="font-bold text-sm text-gray-900">{c.rating?.toFixed(1)}</span>
+          <span className="text-xs text-gray-500">({c.review_count})</span>
+        </div>
+        {isNewCreator(c.completed_orders ?? 0) ? (
+          <span className="text-[10px] font-bold text-gray-500 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded-full">
+            新規クリエイター
+          </span>
+        ) : (
+          <span
+            className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border ${getScoreGrade(c.score ?? 0).color} bg-white border-gray-200`}
+            title={`スコア ${c.score}/1000`}
+          >
+            Score {c.score}
+          </span>
+        )}
       </div>
+
+      {/* Top 3 badges */}
+      <BadgeShowcase creatorId={c.id} max={3} size="sm" compact className="mb-3" />
 
       {/* Separator */}
       <div className="border-t border-gray-100 pt-3 flex items-end justify-between">

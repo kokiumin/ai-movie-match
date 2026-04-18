@@ -8,6 +8,8 @@ import { useAIMatching } from "@/hooks/useAIMatching";
 import type { CreatorProfile } from "@/lib/ai";
 import { TermsPage } from "@/components/legal/TermsPage";
 import { PrivacyPage } from "@/components/legal/PrivacyPage";
+import { HowScoringWorksPage } from "@/components/legal/HowScoringWorksPage";
+import { BadgesPage } from "@/components/legal/BadgesPage";
 import { FiverHeader } from "@/components/layout/FiverHeader";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { PopularCategories } from "@/components/landing/PopularCategories";
@@ -242,7 +244,7 @@ function NotificationIcon({ type }: { type: string }) {
 }
 
 // ─── Landing Page (Fiverr-style) ─────────────────────────────────────────────
-function LandingPage({ onStart, onShowLegal }: { onStart: () => void; onShowLegal: (page: "terms" | "privacy") => void }) {
+function LandingPage({ onStart, onShowLegal }: { onStart: () => void; onShowLegal: (page: "terms" | "privacy" | "scoring" | "badges") => void }) {
   const { creators: dbCreators } = useCreators({});
   const topCreators = dbCreators.length > 0 ? dbCreators : [];
 
@@ -268,7 +270,9 @@ function LandingPage({ onStart, onShowLegal }: { onStart: () => void; onShowLega
               <span className="text-brand-500">ai</span>-movie-match<span className="text-brand-500">.</span>
             </span>
           </div>
-          <div className="flex gap-5 font-medium">
+          <div className="flex gap-5 font-medium flex-wrap">
+            <button onClick={() => onShowLegal("scoring")} className="hover:text-gray-600 cursor-pointer transition-colors">スコアの仕組み</button>
+            <button onClick={() => onShowLegal("badges")} className="hover:text-gray-600 cursor-pointer transition-colors">バッジ一覧</button>
             <button onClick={() => onShowLegal("terms")} className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</button>
             <button onClick={() => onShowLegal("privacy")} className="hover:text-gray-600 cursor-pointer transition-colors">プライバシーポリシー</button>
             <a href="mailto:kokinakagoshi.info@gmail.com" className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</a>
@@ -601,9 +605,14 @@ function CreatorDetail({ c, onBack }: { c: typeof creators[0]; onBack: () => voi
 function ClientCreatorsPage() {
   const [category, setCategory] = useState("すべて");
   const [sortBy, setSortBy] = useState("おすすめ");
+  const [minScore, setMinScore] = useState<number | undefined>(undefined);
   const [selected, setSelected] = useState<any | null>(null);
 
-  const { creators: dbCreators, loading } = useCreators({ category: category === "すべて" ? undefined : category, sortBy });
+  const { creators: dbCreators, loading } = useCreators({
+    category: category === "すべて" ? undefined : category,
+    sortBy,
+    minScore,
+  });
 
   if (selected) {
     // Convert Profile to legacy creators format for CreatorDetail compatibility
@@ -644,6 +653,21 @@ function ClientCreatorsPage() {
           のクリエイターが見つかりました
         </p>
         <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">スコア:</span>
+          <Select
+            value={minScore ? String(minScore) : "all"}
+            onValueChange={(v) => setMinScore(v === "all" ? undefined : Number(v))}
+          >
+            <SelectTrigger className="w-28 text-xs border-gray-300 bg-white h-9">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all" className="text-xs">すべて</SelectItem>
+              <SelectItem value="500" className="text-xs">500以上</SelectItem>
+              <SelectItem value="600" className="text-xs">600以上</SelectItem>
+              <SelectItem value="800" className="text-xs">800以上</SelectItem>
+            </SelectContent>
+          </Select>
           <span className="text-xs text-gray-500">並び替え:</span>
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-32 text-xs border-gray-300 bg-white h-9">
@@ -688,7 +712,7 @@ function ClientCreatorsPage() {
 // ─── [Client] 案件投稿 ────────────────────────────────────────────────────────
 function ClientPostProject({ onSuccess }: { onSuccess: () => void }) {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ company: "", industry: "", type: "", budget: "", deadline: "", description: "", style: "", proSelect: true });
+  const [form, setForm] = useState({ company: "", industry: "", type: "", budget: "", deadline: "", description: "", style: "", proSelect: true, highScoreOnly: false });
   const upd = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
   const aiHearing = useAIHearing();
 
@@ -797,6 +821,18 @@ function ClientPostProject({ onSuccess }: { onSuccess: () => void }) {
                 <div>
                   <p className="text-sm font-semibold text-gray-800">プロ選定サービスを利用する <span className="text-xs text-blue-600 ml-1">¥30,000〜</span></p>
                   <p className="text-xs text-gray-500 mt-0.5">専任スタッフがご要件をヒアリングし、最適なクリエイターを選定します</p>
+                </div>
+              </div>
+            </div>
+            <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${form.highScoreOnly ? "border-emerald-600 bg-emerald-50" : "border-gray-200"}`}
+              onClick={() => upd("highScoreOnly", !form.highScoreOnly)}>
+              <div className="flex items-center gap-3">
+                <div className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${form.highScoreOnly ? "bg-emerald-700 border-emerald-700" : "border-gray-400"}`}>
+                  {form.highScoreOnly && <CheckCircle size={12} className="text-white" />}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">スコア600以上のクリエイターのみに募集する</p>
+                  <p className="text-xs text-gray-500 mt-0.5">品質シグナルの高いクリエイターに絞って募集します。該当するクリエイターにしか案件が表示されません。</p>
                 </div>
               </div>
             </div>
@@ -1195,13 +1231,20 @@ function parseBudget(budget: string): number {
 
 // ─── [Creator] 案件を探す ─────────────────────────────────────────────────────
 function CreatorProjectsPage() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { info: rankInfo } = useCreatorRank(user?.id ?? "demo-creator");
+  const myScore = profile?.score ?? 0;
   const [category, setCategory] = useState("all");
   const [applied, setApplied] = useState<number[]>([]);
   const [detail, setDetail] = useState<typeof projects[0] | null>(null);
   const catMap: Record<string, string> = { recruit: "採用動画", company: "会社紹介動画", sns: "SNS広告動画", product: "商品PR動画" };
-  const filtered = projects.filter(p => category === "all" || p.type === catMap[category]);
+  const filtered = projects
+    .filter(p => category === "all" || p.type === catMap[category])
+    // 案件側が「スコアN以上のみに募集」を指定している場合、スコア未達のクリエイターには非表示
+    .filter(p => {
+      const minScore = (p as any).min_creator_score ?? 0;
+      return minScore === 0 || myScore >= minScore;
+    });
 
   if (detail) return (
     <div className="max-w-2xl mx-auto">
@@ -1437,7 +1480,7 @@ export default function App() {
   const [creatorPage, setCreatorPage] = useState<"projects" | "messages" | "mypage">("projects");
   const [postDone, setPostDone] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [legalPage, setLegalPage] = useState<"terms" | "privacy" | null>(null);
+  const [legalPage, setLegalPage] = useState<"terms" | "privacy" | "scoring" | "badges" | null>(null);
 
   // Use auth-based role when available, fallback to local state
   const effectiveRole: Role = (!isDemo && profile?.role === "creator") ? "creator" : role;
@@ -1455,6 +1498,8 @@ export default function App() {
 
   if (legalPage === "terms") return <TermsPage onBack={() => setLegalPage(null)} />;
   if (legalPage === "privacy") return <PrivacyPage onBack={() => setLegalPage(null)} />;
+  if (legalPage === "scoring") return <HowScoringWorksPage onBack={() => setLegalPage(null)} />;
+  if (legalPage === "badges") return <BadgesPage onBack={() => setLegalPage(null)} />;
   if (showLanding) return <LandingPage onStart={() => setShowLanding(false)} onShowLegal={(p) => setLegalPage(p)} />;
 
   return (
@@ -1540,7 +1585,9 @@ export default function App() {
               <span className="text-brand-500">ai</span>-movie-match<span className="text-brand-500">.</span>
             </span>
           </div>
-          <div className="flex gap-5 font-medium">
+          <div className="flex gap-5 font-medium flex-wrap">
+            <button onClick={() => setLegalPage("scoring")} className="hover:text-gray-600 cursor-pointer transition-colors">スコアの仕組み</button>
+            <button onClick={() => setLegalPage("badges")} className="hover:text-gray-600 cursor-pointer transition-colors">バッジ一覧</button>
             <button onClick={() => setLegalPage("terms")} className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</button>
             <button onClick={() => setLegalPage("privacy")} className="hover:text-gray-600 cursor-pointer transition-colors">プライバシーポリシー</button>
             <a href="mailto:kokinakagoshi.info@gmail.com" className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</a>

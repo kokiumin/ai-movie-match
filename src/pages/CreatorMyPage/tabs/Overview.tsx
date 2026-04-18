@@ -6,6 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RankDashboard } from "../RankDashboard";
 import { BadgeList } from "../BadgeList";
+import { ScoreChart } from "../ScoreChart";
+import { ScoreCircle } from "@/components/creators/ScoreCircle";
+import { BadgeShowcase } from "@/components/creators/BadgeShowcase";
+import { NextBadgeHint } from "@/components/creators/NextBadgeHint";
+import { useCreatorScore } from "@/hooks/useCreatorScore";
 import { DEMO_CREATOR } from "../types";
 
 function BadgeEl({ type }: { type: string }) {
@@ -33,6 +38,7 @@ interface OverviewTabProps {
  */
 export function Overview({ creatorId }: OverviewTabProps) {
   const me = DEMO_CREATOR;
+  const { info: scoreInfo } = useCreatorScore(creatorId);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [photo, setPhoto] = useState<string | null>(null);
   const [editProfile, setEditProfile] = useState(false);
@@ -49,7 +55,59 @@ export function Overview({ creatorId }: OverviewTabProps) {
 
   return (
     <div className="space-y-4">
-      {/* ① ランクダッシュボード (最上部・最重要) */}
+      {/* ① スコア + ランク (最上部・最重要) */}
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="p-5 flex flex-col sm:flex-row items-center gap-5 border-b border-gray-100">
+          <ScoreCircle
+            score={scoreInfo?.score ?? 0}
+            completedOrders={scoreInfo?.completed_orders ?? 0}
+            size="lg"
+          />
+          <div className="flex-1 w-full">
+            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+              保有バッジ
+            </div>
+            <BadgeShowcase creatorId={creatorId} size="sm" />
+            {scoreInfo && (
+              <div className="grid grid-cols-3 gap-2 mt-3 text-center text-xs">
+                <div>
+                  <div className="text-gray-400">平均評価</div>
+                  <div className="font-bold text-gray-900">
+                    ★ {scoreInfo.avg_rating.toFixed(1)}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-400">納期遵守</div>
+                  <div className="font-bold text-gray-900">
+                    {Math.round(scoreInfo.on_time_delivery_rate * 100)}%
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-400">リピート</div>
+                  <div className="font-bold text-gray-900">
+                    {Math.round(scoreInfo.repeat_client_rate * 100)}%
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {scoreInfo && (
+        <NextBadgeHint
+          creatorId={creatorId}
+          stats={{
+            completed_orders: scoreInfo.completed_orders,
+            avg_rating: scoreInfo.avg_rating,
+            on_time_delivery_rate: scoreInfo.on_time_delivery_rate,
+          }}
+        />
+      )}
+
+      <ScoreChart creatorId={creatorId} />
+
+      {/* ② ランクダッシュボード */}
       <RankDashboard creatorId={creatorId} />
 
       {/* ② プロフィール */}

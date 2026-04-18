@@ -39,6 +39,11 @@ export type Database = {
           total_earnings_90d: number
           completed_orders: number
           rank_updated_at: string | null
+          score: number
+          avg_rating: number
+          on_time_delivery_rate: number
+          repeat_client_rate: number
+          score_updated_at: string | null
           created_at: string
           updated_at: string
         }
@@ -71,6 +76,11 @@ export type Database = {
           total_earnings_90d?: number
           completed_orders?: number
           rank_updated_at?: string | null
+          score?: number
+          avg_rating?: number
+          on_time_delivery_rate?: number
+          repeat_client_rate?: number
+          score_updated_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -103,6 +113,11 @@ export type Database = {
           total_earnings_90d?: number
           completed_orders?: number
           rank_updated_at?: string | null
+          score?: number
+          avg_rating?: number
+          on_time_delivery_rate?: number
+          repeat_client_rate?: number
+          score_updated_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -123,6 +138,7 @@ export type Database = {
           status: 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
           view_count: number
           proposal_count: number
+          min_creator_score: number
           completed_at: string | null
           payout_status: 'pending' | 'paid' | 'refunded' | 'disputed'
           payout_completed_at: string | null
@@ -149,6 +165,7 @@ export type Database = {
           status?: 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
           view_count?: number
           proposal_count?: number
+          min_creator_score?: number
           completed_at?: string | null
           payout_status?: 'pending' | 'paid' | 'refunded' | 'disputed'
           payout_completed_at?: string | null
@@ -175,6 +192,7 @@ export type Database = {
           status?: 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
           view_count?: number
           proposal_count?: number
+          min_creator_score?: number
           completed_at?: string | null
           payout_status?: 'pending' | 'paid' | 'refunded' | 'disputed'
           payout_completed_at?: string | null
@@ -206,6 +224,7 @@ export type Database = {
           price: number | null
           delivery_days: number | null
           status: 'pending' | 'accepted' | 'rejected'
+          tools_used: string[] | null
           created_at: string
         }
         Insert: {
@@ -216,6 +235,7 @@ export type Database = {
           price?: number | null
           delivery_days?: number | null
           status?: 'pending' | 'accepted' | 'rejected'
+          tools_used?: string[] | null
           created_at?: string
         }
         Update: {
@@ -226,6 +246,7 @@ export type Database = {
           price?: number | null
           delivery_days?: number | null
           status?: 'pending' | 'accepted' | 'rejected'
+          tools_used?: string[] | null
           created_at?: string
         }
         Relationships: [
@@ -599,6 +620,74 @@ export type Database = {
           },
         ]
       }
+      creator_badges: {
+        Row: {
+          creator_id: string
+          badge_type: 'verified_creator' | 'top_rated' | 'fast_delivery' | 'kling_master' | 'runway_master' | 'heygen_master' | 'seedance_master' | 'founding_creator' | 'rising_star' | 'launch_period_creator'
+          awarded_at: string
+          expires_at: string | null
+          reason: Json | null
+        }
+        Insert: {
+          creator_id: string
+          badge_type: 'verified_creator' | 'top_rated' | 'fast_delivery' | 'kling_master' | 'runway_master' | 'heygen_master' | 'seedance_master' | 'founding_creator' | 'rising_star' | 'launch_period_creator'
+          awarded_at?: string
+          expires_at?: string | null
+          reason?: Json | null
+        }
+        Update: {
+          creator_id?: string
+          badge_type?: 'verified_creator' | 'top_rated' | 'fast_delivery' | 'kling_master' | 'runway_master' | 'heygen_master' | 'seedance_master' | 'founding_creator' | 'rising_star' | 'launch_period_creator'
+          awarded_at?: string
+          expires_at?: string | null
+          reason?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'creator_badges_creator_id_fkey'
+            columns: ['creator_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      creator_score_history: {
+        Row: {
+          id: string
+          creator_id: string
+          score: number
+          avg_rating: number
+          on_time_delivery_rate: number
+          repeat_client_rate: number
+          completed_orders: number
+          calculated_at: string
+          calculated_date: string
+        }
+        Insert: {
+          id?: string
+          creator_id: string
+          score: number
+          avg_rating: number
+          on_time_delivery_rate: number
+          repeat_client_rate: number
+          completed_orders: number
+          calculated_at?: string
+          calculated_date?: string
+        }
+        Update: {
+          id?: string
+          creator_id?: string
+          score?: number
+          avg_rating?: number
+          on_time_delivery_rate?: number
+          repeat_client_rate?: number
+          completed_orders?: number
+          calculated_at?: string
+          calculated_date?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -628,6 +717,8 @@ export type Notification = Database['public']['Tables']['notifications']['Row']
 export type Favorite = Database['public']['Tables']['favorites']['Row']
 export type CreatorRankHistory = Database['public']['Tables']['creator_rank_history']['Row']
 export type ClientCreatorRelation = Database['public']['Tables']['client_creator_relations']['Row']
+export type CreatorBadge = Database['public']['Tables']['creator_badges']['Row']
+export type CreatorScoreHistory = Database['public']['Tables']['creator_score_history']['Row']
 
 // Enum type aliases
 export type UserRole = 'client' | 'creator' | 'admin'

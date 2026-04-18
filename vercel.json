@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/update-creator-ranks",
       "schedule": "0 17 * * *"
+    },
+    {
+      "path": "/api/cron/update-creator-scores",
+      "schedule": "30 17 * * *"
     }
   ]
 }

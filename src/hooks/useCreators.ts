@@ -4,12 +4,12 @@ import type { Profile } from "@/types/database";
 
 // Mock data fallback (same as original App.tsx)
 const MOCK_CREATORS: Profile[] = [
-  { id: "1", role: "creator", display_name: "田中 蒼", handle: "@aosora_gen", avatar_url: null, company_name: null, industry: null, bio: "生成AI専門クリエイター。中小企業の採用・PR動画を低コストで高速制作します。", specialty: ["採用動画", "会社紹介"], tools: ["Runway", "Sora", "CapCut"], tags: ["採用動画", "会社紹介"], badge: "認定", turnaround: "5〜7日", min_price: 50000, max_price: 150000, rating: 4.9, review_count: 38, delivery_count: 52, monthly_revenue: 420000, active_projects: 3, stripe_account_id: null, stripe_connected: false, color: "bg-blue-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, created_at: "", updated_at: "" },
-  { id: "2", role: "creator", display_name: "鈴木 凛", handle: "@rin_aicinema", avatar_url: null, company_name: null, industry: null, bio: "SNS向けショート動画が得意。ターゲットに刺さるAI映像を高速納品。", specialty: ["SNS広告", "商品PR"], tools: ["Kling", "HeyGen", "Premiere"], tags: ["SNS広告", "商品PR"], badge: "", turnaround: "3〜5日", min_price: 30000, max_price: 100000, rating: 4.7, review_count: 24, delivery_count: 31, monthly_revenue: 180000, active_projects: 2, stripe_account_id: null, stripe_connected: false, color: "bg-emerald-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, created_at: "", updated_at: "" },
-  { id: "3", role: "creator", display_name: "山本 剛", handle: "@gocreate_ai", avatar_url: null, company_name: null, industry: null, bio: "元映像ディレクター。AIで単価を下げながら品質を維持。採用動画の実績多数。", specialty: ["採用動画", "研修コンテンツ"], tools: ["Sora", "D-ID", "After Effects"], tags: ["採用動画", "研修・説明"], badge: "認定", turnaround: "7〜10日", min_price: 80000, max_price: 200000, rating: 4.8, review_count: 41, delivery_count: 67, monthly_revenue: 610000, active_projects: 4, stripe_account_id: null, stripe_connected: false, color: "bg-violet-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, created_at: "", updated_at: "" },
-  { id: "4", role: "creator", display_name: "伊藤 美咲", handle: "@misaki_aifilm", avatar_url: null, company_name: null, industry: null, bio: "アート系ビジュアルが強み。ブランドイメージを高める映像表現を得意とする。", specialty: ["ブランド動画", "会社紹介"], tools: ["Runway", "Midjourney", "Resolve"], tags: ["ブランド動画", "会社紹介"], badge: "", turnaround: "5〜8日", min_price: 100000, max_price: 250000, rating: 4.6, review_count: 17, delivery_count: 23, monthly_revenue: 320000, active_projects: 2, stripe_account_id: null, stripe_connected: false, color: "bg-amber-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, created_at: "", updated_at: "" },
-  { id: "5", role: "creator", display_name: "中村 健", handle: "@ken_aigiga", avatar_url: null, company_name: null, industry: null, bio: "業界最多実績。どんな業種でも対応できる汎用力と圧倒的スピードが強み。", specialty: ["採用動画", "SNS広告", "会社紹介"], tools: ["Kling", "Sora", "Runway"], tags: ["採用動画", "SNS広告", "会社紹介"], badge: "TOP", turnaround: "4〜6日", min_price: 50000, max_price: 180000, rating: 4.9, review_count: 56, delivery_count: 89, monthly_revenue: 780000, active_projects: 5, stripe_account_id: null, stripe_connected: false, color: "bg-rose-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, created_at: "", updated_at: "" },
-  { id: "6", role: "creator", display_name: "林 奈津子", handle: "@natsu_aiworks", avatar_url: null, company_name: null, industry: null, bio: "食品・コスメ・アパレルのSNS広告専門。短納期・低価格が強み。", specialty: ["商品PR", "SNS広告"], tools: ["Kling", "CapCut", "HeyGen"], tags: ["商品PR", "SNS広告"], badge: "", turnaround: "2〜4日", min_price: 20000, max_price: 80000, rating: 4.5, review_count: 12, delivery_count: 18, monthly_revenue: 140000, active_projects: 1, stripe_account_id: null, stripe_connected: false, color: "bg-pink-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, created_at: "", updated_at: "" },
+  { id: "1", role: "creator", display_name: "田中 蒼", handle: "@aosora_gen", avatar_url: null, company_name: null, industry: null, bio: "生成AI専門クリエイター。中小企業の採用・PR動画を低コストで高速制作します。", specialty: ["採用動画", "会社紹介"], tools: ["Runway", "Sora", "CapCut"], tags: ["採用動画", "会社紹介"], badge: "認定", turnaround: "5〜7日", min_price: 50000, max_price: 150000, rating: 4.9, review_count: 38, delivery_count: 52, monthly_revenue: 420000, active_projects: 3, stripe_account_id: null, stripe_connected: false, color: "bg-blue-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, score: 0, avg_rating: 0, on_time_delivery_rate: 0, repeat_client_rate: 0, score_updated_at: null, created_at: "", updated_at: "" },
+  { id: "2", role: "creator", display_name: "鈴木 凛", handle: "@rin_aicinema", avatar_url: null, company_name: null, industry: null, bio: "SNS向けショート動画が得意。ターゲットに刺さるAI映像を高速納品。", specialty: ["SNS広告", "商品PR"], tools: ["Kling", "HeyGen", "Premiere"], tags: ["SNS広告", "商品PR"], badge: "", turnaround: "3〜5日", min_price: 30000, max_price: 100000, rating: 4.7, review_count: 24, delivery_count: 31, monthly_revenue: 180000, active_projects: 2, stripe_account_id: null, stripe_connected: false, color: "bg-emerald-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, score: 0, avg_rating: 0, on_time_delivery_rate: 0, repeat_client_rate: 0, score_updated_at: null, created_at: "", updated_at: "" },
+  { id: "3", role: "creator", display_name: "山本 剛", handle: "@gocreate_ai", avatar_url: null, company_name: null, industry: null, bio: "元映像ディレクター。AIで単価を下げながら品質を維持。採用動画の実績多数。", specialty: ["採用動画", "研修コンテンツ"], tools: ["Sora", "D-ID", "After Effects"], tags: ["採用動画", "研修・説明"], badge: "認定", turnaround: "7〜10日", min_price: 80000, max_price: 200000, rating: 4.8, review_count: 41, delivery_count: 67, monthly_revenue: 610000, active_projects: 4, stripe_account_id: null, stripe_connected: false, color: "bg-violet-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, score: 0, avg_rating: 0, on_time_delivery_rate: 0, repeat_client_rate: 0, score_updated_at: null, created_at: "", updated_at: "" },
+  { id: "4", role: "creator", display_name: "伊藤 美咲", handle: "@misaki_aifilm", avatar_url: null, company_name: null, industry: null, bio: "アート系ビジュアルが強み。ブランドイメージを高める映像表現を得意とする。", specialty: ["ブランド動画", "会社紹介"], tools: ["Runway", "Midjourney", "Resolve"], tags: ["ブランド動画", "会社紹介"], badge: "", turnaround: "5〜8日", min_price: 100000, max_price: 250000, rating: 4.6, review_count: 17, delivery_count: 23, monthly_revenue: 320000, active_projects: 2, stripe_account_id: null, stripe_connected: false, color: "bg-amber-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, score: 0, avg_rating: 0, on_time_delivery_rate: 0, repeat_client_rate: 0, score_updated_at: null, created_at: "", updated_at: "" },
+  { id: "5", role: "creator", display_name: "中村 健", handle: "@ken_aigiga", avatar_url: null, company_name: null, industry: null, bio: "業界最多実績。どんな業種でも対応できる汎用力と圧倒的スピードが強み。", specialty: ["採用動画", "SNS広告", "会社紹介"], tools: ["Kling", "Sora", "Runway"], tags: ["採用動画", "SNS広告", "会社紹介"], badge: "TOP", turnaround: "4〜6日", min_price: 50000, max_price: 180000, rating: 4.9, review_count: 56, delivery_count: 89, monthly_revenue: 780000, active_projects: 5, stripe_account_id: null, stripe_connected: false, color: "bg-rose-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, score: 0, avg_rating: 0, on_time_delivery_rate: 0, repeat_client_rate: 0, score_updated_at: null, created_at: "", updated_at: "" },
+  { id: "6", role: "creator", display_name: "林 奈津子", handle: "@natsu_aiworks", avatar_url: null, company_name: null, industry: null, bio: "食品・コスメ・アパレルのSNS広告専門。短納期・低価格が強み。", specialty: ["商品PR", "SNS広告"], tools: ["Kling", "CapCut", "HeyGen"], tags: ["商品PR", "SNS広告"], badge: "", turnaround: "2〜4日", min_price: 20000, max_price: 80000, rating: 4.5, review_count: 12, delivery_count: 18, monthly_revenue: 140000, active_projects: 1, stripe_account_id: null, stripe_connected: false, color: "bg-pink-600", rank: "starter", total_earnings_30d: 0, total_earnings_90d: 0, completed_orders: 0, rank_updated_at: null, score: 0, avg_rating: 0, on_time_delivery_rate: 0, repeat_client_rate: 0, score_updated_at: null, created_at: "", updated_at: "" },
 ];
 
 interface UseCreatorsOptions {
@@ -18,6 +18,8 @@ interface UseCreatorsOptions {
   tools?: string[];
   priceRange?: string;
   sortBy?: string;
+  minScore?: number;       // スコア下限 (e.g., 500, 600, 800)
+  badgeTypes?: string[];   // 絞り込みバッジ (1つ以上を保有)
 }
 
 export function useCreators(options: UseCreatorsOptions = {}) {
@@ -56,9 +58,16 @@ export function useCreators(options: UseCreatorsOptions = {}) {
           return true;
         });
       }
+      if (typeof options.minScore === "number") {
+        result = result.filter(c => (c.score ?? 0) >= options.minScore!);
+      }
       if (sortBy === "評価が高い") result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
       else if (sortBy === "価格が安い") result.sort((a, b) => (a.min_price ?? 0) - (b.min_price ?? 0));
       else if (sortBy === "実績が多い") result.sort((a, b) => (b.delivery_count ?? 0) - (a.delivery_count ?? 0));
+      else {
+        // デフォルト: スコア順。Starter × score < 500 × Founding Creator バッジ無しは後ろに
+        result.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+      }
 
       setCreators(result);
       setLoading(false);
@@ -95,9 +104,13 @@ export function useCreators(options: UseCreatorsOptions = {}) {
           return true;
         });
       }
+      if (typeof options.minScore === "number") {
+        result = result.filter(c => (c.score ?? 0) >= options.minScore!);
+      }
       if (options.sortBy === "評価が高い") result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
       else if (options.sortBy === "価格が安い") result.sort((a, b) => (a.min_price ?? 0) - (b.min_price ?? 0));
       else if (options.sortBy === "実績が多い") result.sort((a, b) => (b.delivery_count ?? 0) - (a.delivery_count ?? 0));
+      else result.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 
       setCreators(result);
     } catch (e: any) {

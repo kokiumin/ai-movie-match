@@ -8,6 +8,16 @@ import { useAIMatching } from "@/hooks/useAIMatching";
 import type { CreatorProfile } from "@/lib/ai";
 import { TermsPage } from "@/components/legal/TermsPage";
 import { PrivacyPage } from "@/components/legal/PrivacyPage";
+import { FiverHeader } from "@/components/layout/FiverHeader";
+import { HeroSection } from "@/components/landing/HeroSection";
+import { PopularCategories } from "@/components/landing/PopularCategories";
+import { FeatureSection } from "@/components/landing/FeatureSection";
+import { CreatorSpotlight } from "@/components/landing/CreatorSpotlight";
+import { CtaBanner } from "@/components/landing/CtaBanner";
+import { GigCard } from "@/components/creators/GigCard";
+import { CategoryNav } from "@/components/creators/CategoryNav";
+import { PackageTiers } from "@/components/creators/PackageTiers";
+import { useCreators } from "@/hooks/useCreators";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -228,114 +238,32 @@ function NotificationIcon({ type }: { type: string }) {
   return <Bell size={14} className="text-gray-400" />;
 }
 
-// ─── Landing Page ─────────────────────────────────────────────────────────────
+// ─── Landing Page (Fiverr-style) ─────────────────────────────────────────────
 function LandingPage({ onStart, onShowLegal }: { onStart: () => void; onShowLegal: (page: "terms" | "privacy") => void }) {
+  const { creators: dbCreators } = useCreators({});
+  const topCreators = dbCreators.length > 0 ? dbCreators : [];
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900 text-white">
-        <div className="max-w-5xl mx-auto px-5 py-20 text-center">
-          <div className="flex items-center justify-center gap-2.5 mb-6">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
-              <Video size={22} className="text-white" />
-            </div>
-            <span className="font-serif-jp text-xl font-semibold tracking-tight">AIムービーマッチ</span>
-          </div>
-          <h1 className="font-serif-jp text-3xl md:text-5xl font-bold leading-tight tracking-tight mb-5">
-            映像クリエイターと企業を、<br />AIでつなぐ
-          </h1>
-          <p className="text-blue-200 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-            AI映像制作に特化したクリエイターマッチングプラットフォーム。<br className="hidden md:block" />
-            採用動画・会社紹介・SNS広告を、最短3日・適正価格で。
-          </p>
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Button className="bg-white text-blue-800 hover:bg-blue-50 font-semibold h-12 px-8 text-base shadow-lg" onClick={onStart}>
-              クリエイターを探す <ArrowRight size={16} className="ml-1.5" />
-            </Button>
-            <Button className="bg-white/20 border border-white/40 text-white hover:bg-white/30 font-semibold h-12 px-8 text-base" onClick={onStart}>
-              案件を投稿する
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Features */}
-      <div className="max-w-5xl mx-auto px-5 py-16">
-        <h2 className="font-serif-jp text-2xl font-bold text-center text-gray-900 mb-10 tracking-tight">選ばれる3つの理由</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {[
-            { icon: Zap, color: "bg-amber-50 text-amber-600", title: "最短3日納品", desc: "AI映像制作に特化したクリエイターだから、従来の1/3の期間で高品質な動画を納品。" },
-            { icon: Shield, color: "bg-blue-50 text-blue-600", title: "品質保証", desc: "全クリエイターを審査制で厳選。納品後の修正対応も含めた安心のサポート体制。" },
-            { icon: DollarSign, color: "bg-emerald-50 text-emerald-600", title: "適正価格", desc: "AI活用で制作コストを削減。2万円台から利用可能。予算に合わせた柔軟な対応。" },
-          ].map(f => (
-            <div key={f.title} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-              <div className={`w-12 h-12 rounded-xl ${f.color} flex items-center justify-center mb-4`}>
-                <f.icon size={22} />
-              </div>
-              <h3 className="font-serif-jp font-semibold text-gray-900 text-lg mb-2">{f.title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="bg-gray-50 border-y border-gray-200">
-        <div className="max-w-5xl mx-auto px-5 py-12">
-          <div className="grid grid-cols-3 gap-6 text-center">
-            {[
-              { value: "500+", label: "累計マッチング数", sub: "件" },
-              { value: "100+", label: "登録クリエイター", sub: "名" },
-              { value: "98%", label: "クライアント満足度", sub: "" },
-            ].map(s => (
-              <div key={s.label}>
-                <p className="font-serif-jp text-4xl md:text-5xl font-bold text-blue-700 tracking-tight">{s.value}<span className="text-lg text-gray-400">{s.sub}</span></p>
-                <p className="text-sm text-gray-500 mt-1 font-medium">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* How it works */}
-      <div className="max-w-5xl mx-auto px-5 py-16">
-        <h2 className="font-serif-jp text-2xl font-bold text-center text-gray-900 mb-10 tracking-tight">ご利用の流れ</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { step: 1, title: "案件を投稿", desc: "動画の種類・予算・納期を入力するだけ。最短1分で投稿完了。", icon: FileText },
-            { step: 2, title: "AIマッチング", desc: "案件内容に最適なクリエイターを自動提案。プロ選定サービスも。", icon: Sparkles },
-            { step: 3, title: "制作開始", desc: "クリエイターとチャットで打ち合わせ。進捗もリアルタイムで確認。", icon: Video },
-          ].map(s => (
-            <div key={s.step} className="text-center">
-              <div className="w-14 h-14 bg-blue-700 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <span className="text-white text-xl font-bold">{s.step}</span>
-              </div>
-              <h3 className="font-serif-jp font-semibold text-gray-900 mb-2">{s.title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom CTA */}
-      <div className="bg-gradient-to-r from-blue-700 to-indigo-800 text-white">
-        <div className="max-w-3xl mx-auto px-5 py-14 text-center">
-          <h2 className="font-serif-jp text-2xl md:text-3xl font-bold mb-4 tracking-tight">AI映像制作、始めませんか？</h2>
-          <p className="text-blue-200 mb-6">登録無料・最短1分で案件投稿完了</p>
-          <Button className="bg-white text-blue-800 hover:bg-blue-50 font-semibold h-12 px-10 text-base shadow-lg" onClick={onStart}>
-            無料で始める <ArrowRight size={16} className="ml-1.5" />
-          </Button>
-        </div>
-      </div>
+      <HeroSection onSearch={() => onStart()} onCategoryClick={() => onStart()} />
+      <PopularCategories onCategoryClick={() => onStart()} />
+      <FeatureSection />
+      {topCreators.length > 0 && (
+        <CreatorSpotlight
+          creators={topCreators as any}
+          onCreatorClick={() => onStart()}
+          onSeeAll={onStart}
+        />
+      )}
+      <CtaBanner onStart={onStart} />
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white py-5">
-        <div className="max-w-5xl mx-auto px-5 flex items-center justify-between text-xs text-gray-400">
+      <footer className="border-t border-gray-200 bg-white py-8">
+        <div className="max-w-[1400px] mx-auto px-5 flex items-center justify-between text-xs text-gray-400">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-blue-700 rounded flex items-center justify-center shadow-sm">
-              <Video size={10} className="text-white" />
-            </div>
-            <span className="font-serif-jp font-semibold text-gray-600 tracking-tight">AIムービーマッチ</span>
+            <span className="font-black text-gray-600 tracking-tight text-base">
+              <span className="text-brand-500">ai</span>-movie-match<span className="text-brand-500">.</span>
+            </span>
           </div>
           <div className="flex gap-5 font-medium">
             <button onClick={() => onShowLegal("terms")} className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</button>
@@ -452,8 +380,8 @@ function CreatorDetail({ c, onBack }: { c: typeof creators[0]; onBack: () => voi
   const [activeTab, setActiveTab] = useState<"overview" | "portfolio" | "reviews">("overview");
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <button onClick={onBack} className="text-sm text-blue-700 hover:underline mb-5 flex items-center gap-1 font-medium">
+    <div className="max-w-5xl mx-auto">
+      <button onClick={onBack} className="text-sm text-gray-600 hover:text-gray-900 mb-5 flex items-center gap-1 font-medium">
         <ChevronLeft size={14} /> クリエイター一覧に戻る
       </button>
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
@@ -537,28 +465,40 @@ function CreatorDetail({ c, onBack }: { c: typeof creators[0]; onBack: () => voi
               </div>
             </div>
             <div className="space-y-3">
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
-                <div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold mb-0.5">最低価格</p>
-                  <p className="text-2xl font-bold text-gray-900 tracking-tight">{fmtPrice(c.minPrice)}<span className="text-sm font-normal text-gray-400">〜</span></p>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500 flex items-center gap-1"><Clock size={11} />標準納期</span>
-                    <span className="text-xs font-semibold text-gray-800">{c.turnaround}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500 flex items-center gap-1"><CheckCircle size={11} />納品実績</span>
-                    <span className="text-xs font-semibold text-gray-800">{c.deliveries}件</span>
-                  </div>
-                </div>
-                <Button className="w-full bg-blue-700 hover:bg-blue-800 text-sm font-semibold h-9" onClick={() => setSent(true)}>
-                  見積もりを依頼する
-                </Button>
-              </div>
-              <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs text-slate-600">
-                <p className="font-semibold mb-1 flex items-center gap-1 text-slate-700"><Shield size={11} />プロ選定サービス</p>
+              <PackageTiers
+                creator={{
+                  id: c.id as any,
+                  role: "creator",
+                  display_name: c.name,
+                  handle: c.handle,
+                  avatar_url: null,
+                  company_name: null,
+                  industry: null,
+                  bio: c.bio,
+                  specialty: c.specialty,
+                  tools: c.tools,
+                  tags: c.tags,
+                  badge: c.badge,
+                  turnaround: c.turnaround,
+                  min_price: c.minPrice,
+                  max_price: c.maxPrice,
+                  rating: c.rating,
+                  review_count: c.reviews,
+                  delivery_count: c.deliveries,
+                  monthly_revenue: c.monthlyRevenue,
+                  active_projects: c.activeProjects,
+                  stripe_account_id: null,
+                  stripe_connected: false,
+                  color: c.color,
+                  created_at: "",
+                  updated_at: "",
+                } as any}
+                onOrder={() => setSent(true)}
+                onContact={() => setSent(true)}
+                sent={sent}
+              />
+              <div className="bg-brand-50 border border-brand-200 rounded-lg p-3 text-xs text-gray-700">
+                <p className="font-semibold mb-1 flex items-center gap-1 text-brand-700"><Shield size={11} />プロ選定サービス</p>
                 <p className="leading-relaxed">専任スタッフがご要件をヒアリングし、最適なクリエイターをご提案します（¥30,000〜）</p>
               </div>
             </div>
@@ -656,67 +596,88 @@ function CreatorDetail({ c, onBack }: { c: typeof creators[0]; onBack: () => voi
 
 // ─── [Client] クリエイターを探す ──────────────────────────────────────────────
 function ClientCreatorsPage() {
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("all");
-  const [selectedTools, setSelectedTools] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState("すべて");
+  const [category, setCategory] = useState("すべて");
   const [sortBy, setSortBy] = useState("おすすめ");
-  const [selected, setSelected] = useState<typeof creators[0] | null>(null);
+  const [selected, setSelected] = useState<any | null>(null);
 
-  if (selected) return <CreatorDetail c={selected} onBack={() => setSelected(null)} />;
+  const { creators: dbCreators, loading } = useCreators({ category: category === "すべて" ? undefined : category, sortBy });
 
-  const catMap: Record<string, string> = { recruit: "採用動画", company: "会社紹介", sns: "SNS広告", product: "商品PR", brand: "ブランド動画", training: "研修・説明" };
-  const filtered = creators.filter(c => {
-    const matchCat = category === "all" || c.tags.some(t => t === catMap[category]);
-    const matchQ = query === "" || c.name.includes(query) || c.tags.some(t => t.includes(query)) || c.tools.some(t => t.toLowerCase().includes(query.toLowerCase()));
-    const matchTools = selectedTools.length === 0 || selectedTools.some(t => c.tools.includes(t));
-    const matchPrice = priceRange === "すべて" ||
-      (priceRange === "〜5万円" && c.minPrice <= 50000) ||
-      (priceRange === "5〜10万円" && c.minPrice >= 50000 && c.minPrice <= 100000) ||
-      (priceRange === "10〜20万円" && c.minPrice >= 100000 && c.minPrice <= 200000) ||
-      (priceRange === "20万円以上" && c.minPrice >= 200000);
-    return matchCat && matchQ && matchTools && matchPrice;
-  });
+  if (selected) {
+    // Convert Profile to legacy creators format for CreatorDetail compatibility
+    const legacy = {
+      id: selected.id,
+      name: selected.display_name,
+      handle: selected.handle ?? "",
+      avatar: selected.display_name?.[0] ?? "?",
+      specialty: selected.specialty ?? [],
+      tools: selected.tools ?? [],
+      rating: selected.rating ?? 0,
+      reviews: selected.review_count ?? 0,
+      deliveries: selected.delivery_count ?? 0,
+      minPrice: selected.min_price ?? 0,
+      maxPrice: selected.max_price ?? 0,
+      badge: selected.badge ?? "",
+      turnaround: selected.turnaround ?? "",
+      bio: selected.bio ?? "",
+      color: selected.color ?? "bg-brand-500",
+      tags: selected.tags ?? [],
+      monthlyRevenue: selected.monthly_revenue ?? 0,
+      activeProjects: selected.active_projects ?? 0,
+    };
+    return <CreatorDetail c={legacy} onBack={() => setSelected(null)} />;
+  }
 
   return (
-    <div>
-      <div className="bg-white border-b border-gray-200 mb-5">
-        <div className="flex overflow-x-auto">
-          {VIDEO_CATEGORIES.map(cat => (
-            <button key={cat.id} onClick={() => setCategory(cat.id)}
-              className={`px-4 py-3 text-sm whitespace-nowrap border-b-2 transition-colors font-medium ${category === cat.id ? "border-blue-700 text-blue-700" : "border-transparent text-gray-500 hover:text-gray-800"}`}>
-              {cat.label}
-            </button>
+    <div className="max-w-[1400px] mx-auto">
+      {/* Category chips */}
+      <div className="mb-6">
+        <CategoryNav selected={category} onSelect={setCategory} />
+      </div>
+
+      {/* Header row */}
+      <div className="flex items-center justify-between mb-5">
+        <p className="text-sm text-gray-600">
+          <span className="font-bold text-gray-900">{dbCreators.length}件</span>
+          のクリエイターが見つかりました
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">並び替え:</span>
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-32 text-xs border-gray-300 bg-white h-9">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {["おすすめ", "評価が高い", "価格が安い", "実績が多い"].map(s => (
+                <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Gig grid */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="aspect-[4/3] bg-gray-100 rounded-xl mb-3"></div>
+              <div className="h-4 bg-gray-100 rounded mb-2"></div>
+              <div className="h-3 bg-gray-100 rounded w-2/3"></div>
+            </div>
           ))}
         </div>
-      </div>
-      <div className="flex gap-5">
-        <SidebarFilter selectedTools={selectedTools} setSelectedTools={setSelectedTools} priceRange={priceRange} setPriceRange={setPriceRange} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="relative flex-1">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <Input placeholder="クリエイター名・ツール名で検索" className="pl-9 bg-white border-gray-300 text-sm h-9" value={query} onChange={e => setQuery(e.target.value)} />
-            </div>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-32 text-xs border-gray-300 bg-white h-9"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {["おすすめ", "評価が高い", "価格が安い", "実績が多い"].map(s => <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <p className="text-xs text-gray-400 mb-3 font-medium">{filtered.length}件のクリエイター</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-            {filtered.map(c => <CreatorCard key={c.id} c={c} onClick={() => setSelected(c)} />)}
-          </div>
-          {filtered.length === 0 && (
-            <div className="text-center py-16 text-gray-400">
-              <Search size={32} className="mx-auto mb-3 opacity-20" />
-              <p className="text-sm">条件に合うクリエイターが見つかりませんでした</p>
-            </div>
-          )}
+      ) : dbCreators.length === 0 ? (
+        <div className="text-center py-16 text-gray-400">
+          <Search size={32} className="mx-auto mb-3 opacity-20" />
+          <p className="text-sm">条件に合うクリエイターが見つかりませんでした</p>
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {dbCreators.map((c) => (
+            <GigCard key={c.id} creator={c} onClick={() => setSelected(c)} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -1743,168 +1704,59 @@ export default function App() {
   if (showLanding) return <LandingPage onStart={() => setShowLanding(false)} onShowLegal={(p) => setLegalPage(p)} />;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-20 shadow-sm">
-        <div className="max-w-6xl mx-auto px-5 h-14 flex items-center gap-4">
-          <button className="flex items-center gap-2 mr-2 flex-shrink-0" onClick={() => { setClientPage("creators"); setCreatorPage("projects"); }}>
-            <div className="w-7 h-7 bg-blue-700 rounded flex items-center justify-center shadow-sm">
-              <Video size={14} className="text-white" />
-            </div>
-            <span className="font-serif-jp font-semibold text-gray-900 text-sm tracking-tight">AIムービーマッチ</span>
-          </button>
-          <div className="flex-1 max-w-md relative">
-            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input type="text" placeholder={effectiveRole === "client" ? "クリエイターを探す" : "案件を探す"}
-              className="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-600 bg-gray-50 font-medium text-gray-700 placeholder:font-normal placeholder:text-gray-400" />
-          </div>
-          <div className="flex-1" />
-          <div className="flex items-center bg-gray-100 rounded-lg p-0.5 border border-gray-200">
-            <button onClick={() => handleRoleSwitch("client")}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${effectiveRole === "client" ? "bg-white text-blue-700 shadow-sm border border-gray-200" : "text-gray-500 hover:text-gray-800"}`}>
-              発注者
-            </button>
-            <button onClick={() => handleRoleSwitch("creator")}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${effectiveRole === "creator" ? "bg-white text-blue-700 shadow-sm border border-gray-200" : "text-gray-500 hover:text-gray-800"}`}>
-              クリエイター
-            </button>
-          </div>
-          {effectiveRole === "client" && (
-            <Button size="sm" className="bg-blue-700 hover:bg-blue-800 text-xs h-8 px-4 font-semibold shadow-sm" onClick={() => setClientPage("post")}>
-              案件を投稿する
-            </Button>
-          )}
-          {/* Notification Bell */}
-          <div className="relative">
-            <button
-              className="text-gray-400 hover:text-gray-700 p-1.5 transition-colors relative"
-              onClick={() => setShowNotifications(v => !v)}
-            >
-              <Bell size={18} />
-              {unreadNotifications > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
-                  {unreadNotifications}
-                </span>
-              )}
-            </button>
-            {showNotifications && (
-              <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
-                <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-gray-800">通知</p>
-                  <button onClick={() => setShowNotifications(false)} className="text-gray-400 hover:text-gray-600">
-                    <X size={14} />
-                  </button>
-                </div>
-                <div className="max-h-80 overflow-y-auto">
-                  {(notifs.length > 0 ? notifs : notificationsData).map(n => (
-                    <div key={n.id} className={`px-4 py-3 border-b border-gray-50 flex items-start gap-3 hover:bg-gray-50 transition-colors cursor-pointer ${!n.read ? "bg-blue-50/50" : ""}`}>
-                      <div className="mt-0.5 flex-shrink-0">
-                        <NotificationIcon type={n.type} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-sm leading-snug ${!n.read ? "font-semibold text-gray-800" : "text-gray-600"}`}>{n.text}</p>
-                        <p className="text-xs text-gray-400 mt-0.5">{"timeLabel" in n ? (n as any).timeLabel : (n as any).time}</p>
-                      </div>
-                      {!n.read && <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0 mt-1.5" />}
-                    </div>
-                  ))}
-                </div>
-                <div className="px-4 py-2 border-t border-gray-100 text-center">
-                  <button className="text-xs text-blue-700 font-semibold hover:underline">すべての通知を見る</button>
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="relative">
-            <button
-              className="text-gray-400 hover:text-gray-700 p-1.5 transition-colors"
-              onClick={() => {
-                if (!isDemo && user) setShowUserMenu(v => !v);
-                else if (!isDemo) setShowLoginDialog(true);
-                else setShowUserMenu(v => !v);
-              }}
-            >
-              {user || isDemo ? (
-                <div className="w-7 h-7 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-bold">
-                  {profile?.display_name?.[0] ?? "U"}
-                </div>
-              ) : (
-                <User size={18} />
-              )}
-            </button>
-            {showUserMenu && (
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
-                <div className="px-4 py-3 border-b border-gray-100">
-                  <p className="text-sm font-semibold text-gray-800">{profile?.display_name ?? "ゲスト"}</p>
-                  <p className="text-xs text-gray-400">{user?.email ?? (isDemo ? "デモモード" : "")}</p>
-                </div>
-                {!isDemo && user && (
-                  <button
-                    className="w-full text-left px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
-                    onClick={async () => { await signOut(); setShowUserMenu(false); setShowLanding(true); }}
-                  >
-                    ログアウト
-                  </button>
-                )}
-                {(isDemo || !user) && (
-                  <button
-                    className="w-full text-left px-4 py-2.5 text-sm text-blue-700 font-semibold hover:bg-gray-50 transition-colors"
-                    onClick={() => { setShowLoginDialog(true); setShowUserMenu(false); }}
-                  >
-                    ログイン / 新規登録
-                  </button>
-                )}
-                <button
-                  className="w-full text-left px-4 py-2 text-xs text-gray-400 hover:bg-gray-50 transition-colors border-t border-gray-100"
-                  onClick={() => setShowUserMenu(false)}
-                >
-                  閉じる
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="border-t border-gray-100">
-          <div className="max-w-6xl mx-auto px-5 flex">
-            {role === "client" ? (
-              <>
-                {[
-                  { id: "creators" as const, label: "クリエイターを探す" },
-                  { id: "post" as const, label: "案件を投稿する" },
-                  { id: "match" as const, label: "マッチング管理" },
-                  { id: "messages" as const, label: "メッセージ", badge: unreadMessages },
-                  { id: "admin" as const, label: "管理者ダッシュボード" },
-                ].map(t => (
-                  <button key={t.id} onClick={() => setClientPage(t.id)}
-                    className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors tracking-wide flex items-center gap-1.5 ${clientPage === t.id ? "border-blue-700 text-blue-700" : "border-transparent text-gray-400 hover:text-gray-800"}`}>
-                    {t.label}
-                    {t.badge && t.badge > 0 && (
-                      <span className="w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{t.badge}</span>
-                    )}
-                  </button>
-                ))}
-              </>
-            ) : (
-              <>
-                {[
-                  { id: "projects" as const, label: "案件を探す" },
-                  { id: "messages" as const, label: "メッセージ", badge: unreadMessages },
-                  { id: "mypage" as const, label: "マイページ・売上管理" },
-                ].map(t => (
-                  <button key={t.id} onClick={() => setCreatorPage(t.id)}
-                    className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors tracking-wide flex items-center gap-1.5 ${creatorPage === t.id ? "border-blue-700 text-blue-700" : "border-transparent text-gray-400 hover:text-gray-800"}`}>
-                    {t.label}
-                    {t.badge && t.badge > 0 && (
-                      <span className="w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{t.badge}</span>
-                    )}
-                  </button>
-                ))}
-              </>
-            )}
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-white">
+      <FiverHeader
+        user={user}
+        profile={profile}
+        isDemo={isDemo}
+        role={effectiveRole}
+        onRoleChange={handleRoleSwitch}
+        onLogoClick={() => { setClientPage("creators"); setCreatorPage("projects"); }}
+        onShowLogin={() => setShowLoginDialog(true)}
+        onSignOut={async () => { await signOut(); setShowLanding(true); }}
+        onShowLegal={(p) => setLegalPage(p)}
+        unreadNotifications={unreadNotifications}
+        onPostProject={() => setClientPage("post")}
+      />
 
-      <main className="max-w-6xl mx-auto px-5 py-6">
+      {/* Sub nav for page tabs */}
+      <div className="border-b border-gray-200 bg-white sticky top-[108px] z-20">
+        <div className="max-w-[1400px] mx-auto px-5 flex overflow-x-auto">
+          {effectiveRole === "client" ? (
+            [
+              { id: "creators" as const, label: "クリエイターを探す" },
+              { id: "post" as const, label: "案件を投稿する" },
+              { id: "match" as const, label: "マッチング管理" },
+              { id: "messages" as const, label: "メッセージ", badge: unreadMessages },
+              { id: "admin" as const, label: "管理者ダッシュボード" },
+            ].map(t => (
+              <button key={t.id} onClick={() => setClientPage(t.id)}
+                className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 ${clientPage === t.id ? "border-gray-900 text-gray-900" : "border-transparent text-gray-500 hover:text-gray-900"}`}>
+                {t.label}
+                {t.badge && t.badge > 0 && (
+                  <span className="w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{t.badge}</span>
+                )}
+              </button>
+            ))
+          ) : (
+            [
+              { id: "projects" as const, label: "案件を探す" },
+              { id: "messages" as const, label: "メッセージ", badge: unreadMessages },
+              { id: "mypage" as const, label: "マイページ・売上管理" },
+            ].map(t => (
+              <button key={t.id} onClick={() => setCreatorPage(t.id)}
+                className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 ${creatorPage === t.id ? "border-gray-900 text-gray-900" : "border-transparent text-gray-500 hover:text-gray-900"}`}>
+                {t.label}
+                {t.badge && t.badge > 0 && (
+                  <span className="w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{t.badge}</span>
+                )}
+              </button>
+            ))
+          )}
+        </div>
+      </div>
+
+      <main className="max-w-[1400px] mx-auto px-5 py-8">
         {postDone && (
           <div className="mb-5 bg-emerald-50 border border-emerald-200 rounded-lg p-4 flex items-start gap-3 shadow-sm">
             <CheckCircle size={20} className="text-emerald-500 flex-shrink-0 mt-0.5" />
@@ -1927,13 +1779,12 @@ export default function App() {
         {effectiveRole === "creator" &&creatorPage === "mypage" && <CreatorMyPage />}
       </main>
 
-      <footer className="border-t border-gray-200 bg-white mt-10 py-5">
-        <div className="max-w-6xl mx-auto px-5 flex items-center justify-between text-xs text-gray-400">
+      <footer className="border-t border-gray-200 bg-white mt-10 py-8">
+        <div className="max-w-[1400px] mx-auto px-5 flex items-center justify-between text-xs text-gray-400">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-blue-700 rounded flex items-center justify-center shadow-sm">
-              <Video size={10} className="text-white" />
-            </div>
-            <span className="font-serif-jp font-semibold text-gray-600 tracking-tight">AIムービーマッチ</span>
+            <span className="font-black text-gray-600 tracking-tight text-base">
+              <span className="text-brand-500">ai</span>-movie-match<span className="text-brand-500">.</span>
+            </span>
           </div>
           <div className="flex gap-5 font-medium">
             <button onClick={() => setLegalPage("terms")} className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</button>

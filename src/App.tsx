@@ -17,7 +17,10 @@ import { CtaBanner } from "@/components/landing/CtaBanner";
 import { GigCard } from "@/components/creators/GigCard";
 import { CategoryNav } from "@/components/creators/CategoryNav";
 import { PackageTiers } from "@/components/creators/PackageTiers";
+import { RankDashboard } from "@/components/creators/RankDashboard";
+import { FeeCalculator } from "@/components/creators/FeeCalculator";
 import { useCreators } from "@/hooks/useCreators";
+import { useCreatorRank } from "@/hooks/useCreatorRank";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -1181,8 +1184,19 @@ function MessagingPage() {
   );
 }
 
+// 予算文字列から数値を抽出 (例: "¥80,000〜150,000" → 115000)
+function parseBudget(budget: string): number {
+  const nums = budget.replace(/,/g, "").match(/\d+/g);
+  if (!nums || nums.length === 0) return 0;
+  const values = nums.map(Number);
+  if (values.length === 1) return values[0];
+  return Math.round((values[0] + values[1]) / 2);
+}
+
 // ─── [Creator] 案件を探す ─────────────────────────────────────────────────────
 function CreatorProjectsPage() {
+  const { user } = useAuth();
+  const { info: rankInfo } = useCreatorRank(user?.id ?? "demo-creator");
   const [category, setCategory] = useState("all");
   const [applied, setApplied] = useState<number[]>([]);
   const [detail, setDetail] = useState<typeof projects[0] | null>(null);
@@ -1222,6 +1236,14 @@ function CreatorProjectsPage() {
             <span className="flex items-center gap-1"><MessageSquare size={11} />{detail.proposals}件提案済み</span>
           </div>
           <Separator />
+          {/* ランク別手数料プレビュー */}
+          {rankInfo && parseBudget(detail.budget) > 0 && (
+            <FeeCalculator
+              amount={parseBudget(detail.budget)}
+              rank={rankInfo.rank}
+              isRepeat={false}
+            />
+          )}
           {applied.includes(detail.id) ? (
             <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-700 flex items-center gap-2 font-medium">
               <CheckCircle size={15} /> 提案を送りました。クライアントからの返信をお待ちください。
@@ -1289,6 +1311,8 @@ function CreatorProjectsPage() {
 // ─── [Creator] マイページ ──────────────────────────────────────────────────────
 function CreatorMyPage() {
   const me = creators[0];
+  const { user } = useAuth();
+  const creatorId = user?.id ?? "demo-creator";
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [photo, setPhoto] = useState<string | null>(null);
   const [stripeConnected, setStripeConnected] = useState(false);
@@ -1312,6 +1336,9 @@ function CreatorMyPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-4">
+      {/* ランク・手数料ダッシュボード */}
+      <RankDashboard creatorId={creatorId} />
+
       {/* Profile card */}
       <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
         <div className="bg-gray-50 border-b border-gray-100 px-5 py-3 flex items-center justify-between">

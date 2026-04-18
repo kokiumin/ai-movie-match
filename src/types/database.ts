@@ -34,6 +34,11 @@ export type Database = {
           stripe_account_id: string | null
           stripe_connected: boolean
           color: string | null
+          rank: 'starter' | 'regular' | 'pro' | 'elite'
+          total_earnings_30d: number
+          total_earnings_90d: number
+          completed_orders: number
+          rank_updated_at: string | null
           created_at: string
           updated_at: string
         }
@@ -61,6 +66,11 @@ export type Database = {
           stripe_account_id?: string | null
           stripe_connected?: boolean
           color?: string | null
+          rank?: 'starter' | 'regular' | 'pro' | 'elite'
+          total_earnings_30d?: number
+          total_earnings_90d?: number
+          completed_orders?: number
+          rank_updated_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -88,6 +98,11 @@ export type Database = {
           stripe_account_id?: string | null
           stripe_connected?: boolean
           color?: string | null
+          rank?: 'starter' | 'regular' | 'pro' | 'elite'
+          total_earnings_30d?: number
+          total_earnings_90d?: number
+          completed_orders?: number
+          rank_updated_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -471,6 +486,92 @@ export type Database = {
           },
         ]
       }
+      creator_rank_history: {
+        Row: {
+          id: string
+          creator_id: string
+          previous_rank: 'starter' | 'regular' | 'pro' | 'elite' | null
+          new_rank: 'starter' | 'regular' | 'pro' | 'elite'
+          reason: string | null
+          earnings_30d: number | null
+          earnings_90d: number | null
+          completed_orders: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          creator_id: string
+          previous_rank?: 'starter' | 'regular' | 'pro' | 'elite' | null
+          new_rank: 'starter' | 'regular' | 'pro' | 'elite'
+          reason?: string | null
+          earnings_30d?: number | null
+          earnings_90d?: number | null
+          completed_orders?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          creator_id?: string
+          previous_rank?: 'starter' | 'regular' | 'pro' | 'elite' | null
+          new_rank?: 'starter' | 'regular' | 'pro' | 'elite'
+          reason?: string | null
+          earnings_30d?: number | null
+          earnings_90d?: number | null
+          completed_orders?: number | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'creator_rank_history_creator_id_fkey'
+            columns: ['creator_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      client_creator_relations: {
+        Row: {
+          client_id: string
+          creator_id: string
+          transaction_count: number
+          total_amount: number
+          first_transaction_at: string | null
+          last_transaction_at: string | null
+        }
+        Insert: {
+          client_id: string
+          creator_id: string
+          transaction_count?: number
+          total_amount?: number
+          first_transaction_at?: string | null
+          last_transaction_at?: string | null
+        }
+        Update: {
+          client_id?: string
+          creator_id?: string
+          transaction_count?: number
+          total_amount?: number
+          first_transaction_at?: string | null
+          last_transaction_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'client_creator_relations_client_id_fkey'
+            columns: ['client_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'client_creator_relations_creator_id_fkey'
+            columns: ['creator_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -498,9 +599,12 @@ export type PortfolioItem = Database['public']['Tables']['portfolio_items']['Row
 export type Review = Database['public']['Tables']['reviews']['Row']
 export type Notification = Database['public']['Tables']['notifications']['Row']
 export type Favorite = Database['public']['Tables']['favorites']['Row']
+export type CreatorRankHistory = Database['public']['Tables']['creator_rank_history']['Row']
+export type ClientCreatorRelation = Database['public']['Tables']['client_creator_relations']['Row']
 
 // Enum type aliases
 export type UserRole = 'client' | 'creator' | 'admin'
+export type CreatorRank = 'starter' | 'regular' | 'pro' | 'elite'
 export type ProjectStatus = 'recruiting' | 'matching' | 'contracted' | 'in_progress' | 'completed' | 'cancelled'
 
 // UI display mapping (English DB enum → Japanese UI label)

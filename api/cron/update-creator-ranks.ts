@@ -11,7 +11,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 
-export const config = { runtime: "nodejs" };
+export const config = { runtime: "edge" };
 
 const JOB_NAME = "rank-update";
 

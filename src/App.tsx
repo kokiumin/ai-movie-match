@@ -6,6 +6,8 @@ import { useMessages } from "@/hooks/useMessages";
 import { useAIHearing } from "@/hooks/useAIHearing";
 import { useAIMatching } from "@/hooks/useAIMatching";
 import type { CreatorProfile } from "@/lib/ai";
+import { TermsPage } from "@/components/legal/TermsPage";
+import { PrivacyPage } from "@/components/legal/PrivacyPage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -227,7 +229,7 @@ function NotificationIcon({ type }: { type: string }) {
 }
 
 // ─── Landing Page ─────────────────────────────────────────────────────────────
-function LandingPage({ onStart }: { onStart: () => void }) {
+function LandingPage({ onStart, onShowLegal }: { onStart: () => void; onShowLegal: (page: "terms" | "privacy") => void }) {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
@@ -336,9 +338,9 @@ function LandingPage({ onStart }: { onStart: () => void }) {
             <span className="font-serif-jp font-semibold text-gray-600 tracking-tight">AIムービーマッチ</span>
           </div>
           <div className="flex gap-5 font-medium">
-            <span className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</span>
-            <span className="hover:text-gray-600 cursor-pointer transition-colors">プライバシーポリシー</span>
-            <span className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</span>
+            <button onClick={() => onShowLegal("terms")} className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</button>
+            <button onClick={() => onShowLegal("privacy")} className="hover:text-gray-600 cursor-pointer transition-colors">プライバシーポリシー</button>
+            <a href="mailto:kokinakagoshi.info@gmail.com" className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</a>
           </div>
         </div>
       </footer>
@@ -1720,6 +1722,7 @@ export default function App() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [legalPage, setLegalPage] = useState<"terms" | "privacy" | null>(null);
 
   // Use auth-based role when available, fallback to local state
   const effectiveRole: Role = (!isDemo && profile?.role === "creator") ? "creator" : role;
@@ -1735,7 +1738,9 @@ export default function App() {
     }
   };
 
-  if (showLanding) return <LandingPage onStart={() => setShowLanding(false)} />;
+  if (legalPage === "terms") return <TermsPage onBack={() => setLegalPage(null)} />;
+  if (legalPage === "privacy") return <PrivacyPage onBack={() => setLegalPage(null)} />;
+  if (showLanding) return <LandingPage onStart={() => setShowLanding(false)} onShowLegal={(p) => setLegalPage(p)} />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1931,9 +1936,9 @@ export default function App() {
             <span className="font-serif-jp font-semibold text-gray-600 tracking-tight">AIムービーマッチ</span>
           </div>
           <div className="flex gap-5 font-medium">
-            <span className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</span>
-            <span className="hover:text-gray-600 cursor-pointer transition-colors">プライバシーポリシー</span>
-            <span className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</span>
+            <button onClick={() => setLegalPage("terms")} className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</button>
+            <button onClick={() => setLegalPage("privacy")} className="hover:text-gray-600 cursor-pointer transition-colors">プライバシーポリシー</button>
+            <a href="mailto:kokinakagoshi.info@gmail.com" className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</a>
           </div>
         </div>
       </footer>

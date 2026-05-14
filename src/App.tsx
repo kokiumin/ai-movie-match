@@ -10,6 +10,9 @@ import { TermsPage } from "@/components/legal/TermsPage";
 import { PrivacyPage } from "@/components/legal/PrivacyPage";
 import { HowScoringWorksPage } from "@/components/legal/HowScoringWorksPage";
 import { BadgesPage } from "@/components/legal/BadgesPage";
+import { TokushohoPage } from "@/components/legal/TokushohoPage";
+import { AIContentPolicyPage } from "@/components/legal/AIContentPolicyPage";
+import { CommunityGuidelinesPage } from "@/components/legal/CommunityGuidelinesPage";
 import { FiverHeader } from "@/components/layout/FiverHeader";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { PopularCategories } from "@/components/landing/PopularCategories";
@@ -244,7 +247,7 @@ function NotificationIcon({ type }: { type: string }) {
 }
 
 // ─── Landing Page (Fiverr-style) ─────────────────────────────────────────────
-function LandingPage({ onStart, onShowLegal }: { onStart: () => void; onShowLegal: (page: "terms" | "privacy" | "scoring" | "badges") => void }) {
+function LandingPage({ onStart, onShowLegal }: { onStart: () => void; onShowLegal: (page: "terms" | "terms-creator" | "privacy" | "tokushoho" | "ai-policy" | "community" | "scoring" | "badges") => void }) {
   const { creators: dbCreators } = useCreators({});
   const topCreators = dbCreators.length > 0 ? dbCreators : [];
 
@@ -270,12 +273,15 @@ function LandingPage({ onStart, onShowLegal }: { onStart: () => void; onShowLega
               <span className="text-brand-500">ai</span>-movie-match<span className="text-brand-500">.</span>
             </span>
           </div>
-          <div className="flex gap-5 font-medium flex-wrap">
+          <div className="flex gap-x-5 gap-y-1 font-medium flex-wrap">
             <button onClick={() => onShowLegal("scoring")} className="hover:text-gray-600 cursor-pointer transition-colors">スコアの仕組み</button>
             <button onClick={() => onShowLegal("badges")} className="hover:text-gray-600 cursor-pointer transition-colors">バッジ一覧</button>
             <button onClick={() => onShowLegal("terms")} className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</button>
             <button onClick={() => onShowLegal("privacy")} className="hover:text-gray-600 cursor-pointer transition-colors">プライバシーポリシー</button>
-            <a href="mailto:kokinakagoshi.info@gmail.com" className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</a>
+            <button onClick={() => onShowLegal("tokushoho")} className="hover:text-gray-600 cursor-pointer transition-colors">特商法表記</button>
+            <button onClick={() => onShowLegal("ai-policy")} className="hover:text-gray-600 cursor-pointer transition-colors">AI生成物ポリシー</button>
+            <button onClick={() => onShowLegal("community")} className="hover:text-gray-600 cursor-pointer transition-colors">コミュニティガイドライン</button>
+            <a href="mailto:support@ai-movie-match.com" className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</a>
           </div>
         </div>
       </footer>
@@ -1480,7 +1486,10 @@ export default function App() {
   const [creatorPage, setCreatorPage] = useState<"projects" | "messages" | "mypage">("projects");
   const [postDone, setPostDone] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [legalPage, setLegalPage] = useState<"terms" | "privacy" | "scoring" | "badges" | null>(null);
+  const [legalPage, setLegalPage] = useState<
+    | "terms" | "terms-creator" | "privacy" | "tokushoho" | "ai-policy" | "community"
+    | "scoring" | "badges" | null
+  >(null);
 
   // Use auth-based role when available, fallback to local state
   const effectiveRole: Role = (!isDemo && profile?.role === "creator") ? "creator" : role;
@@ -1496,8 +1505,12 @@ export default function App() {
     }
   };
 
-  if (legalPage === "terms") return <TermsPage onBack={() => setLegalPage(null)} />;
+  if (legalPage === "terms") return <TermsPage onBack={() => setLegalPage(null)} initialTab="client" />;
+  if (legalPage === "terms-creator") return <TermsPage onBack={() => setLegalPage(null)} initialTab="creator" />;
   if (legalPage === "privacy") return <PrivacyPage onBack={() => setLegalPage(null)} />;
+  if (legalPage === "tokushoho") return <TokushohoPage onBack={() => setLegalPage(null)} />;
+  if (legalPage === "ai-policy") return <AIContentPolicyPage onBack={() => setLegalPage(null)} />;
+  if (legalPage === "community") return <CommunityGuidelinesPage onBack={() => setLegalPage(null)} />;
   if (legalPage === "scoring") return <HowScoringWorksPage onBack={() => setLegalPage(null)} />;
   if (legalPage === "badges") return <BadgesPage onBack={() => setLegalPage(null)} />;
   if (showLanding) return <LandingPage onStart={() => setShowLanding(false)} onShowLegal={(p) => setLegalPage(p)} />;
@@ -1585,12 +1598,15 @@ export default function App() {
               <span className="text-brand-500">ai</span>-movie-match<span className="text-brand-500">.</span>
             </span>
           </div>
-          <div className="flex gap-5 font-medium flex-wrap">
+          <div className="flex gap-x-5 gap-y-1 font-medium flex-wrap">
             <button onClick={() => setLegalPage("scoring")} className="hover:text-gray-600 cursor-pointer transition-colors">スコアの仕組み</button>
             <button onClick={() => setLegalPage("badges")} className="hover:text-gray-600 cursor-pointer transition-colors">バッジ一覧</button>
             <button onClick={() => setLegalPage("terms")} className="hover:text-gray-600 cursor-pointer transition-colors">利用規約</button>
             <button onClick={() => setLegalPage("privacy")} className="hover:text-gray-600 cursor-pointer transition-colors">プライバシーポリシー</button>
-            <a href="mailto:kokinakagoshi.info@gmail.com" className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</a>
+            <button onClick={() => setLegalPage("tokushoho")} className="hover:text-gray-600 cursor-pointer transition-colors">特商法表記</button>
+            <button onClick={() => setLegalPage("ai-policy")} className="hover:text-gray-600 cursor-pointer transition-colors">AI生成物ポリシー</button>
+            <button onClick={() => setLegalPage("community")} className="hover:text-gray-600 cursor-pointer transition-colors">コミュニティガイドライン</button>
+            <a href="mailto:support@ai-movie-match.com" className="hover:text-gray-600 cursor-pointer transition-colors">お問い合わせ</a>
           </div>
         </div>
       </footer>

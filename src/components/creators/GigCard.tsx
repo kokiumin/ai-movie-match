@@ -1,7 +1,8 @@
 import { Star, Heart, Play, Shield, Award } from "lucide-react";
 import { useState } from "react";
 import type { Profile } from "@/types/database";
-import { isNewCreator, getScoreGrade } from "@/lib/score";
+import { isNewCreator } from "@/lib/score";
+import { RankBadge } from "./RankBadge";
 import { BadgeShowcase } from "./BadgeShowcase";
 
 interface GigCardProps {
@@ -91,12 +92,8 @@ export function GigCard({ creator: c, onClick }: GigCardProps) {
             新規クリエイター
           </span>
         ) : (
-          <span
-            className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border ${getScoreGrade(c.score ?? 0).color} bg-white border-gray-200`}
-            title={`スコア ${c.score}/1000`}
-          >
-            Score {c.score}
-          </span>
+          // Phase 6: スコア数値ではなくランクを一次指標として表示
+          c.rank && c.rank !== "starter" && <RankBadge rank={c.rank} size="sm" />
         )}
       </div>
 

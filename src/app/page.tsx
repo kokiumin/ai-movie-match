@@ -165,10 +165,10 @@ export default function HomePage() {
 
           <div className="max-w-xl mx-auto flex flex-col sm:flex-row gap-3 mb-4">
             <Link
-              href="/app"
+              href="/quote"
               className="flex-1 bg-gray-900 text-white font-bold py-4 rounded-md hover:bg-gray-800 transition-colors text-sm md:text-base flex items-center justify-center gap-2"
             >
-              <Search size={16} /> どんな動画を作りたい?
+              <Sparkles size={16} /> 3問で相場を確認する
             </Link>
             <Link
               href="/creators"

@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: SITE_URL, lastModified: now, changeFrequency: "weekly", priority: 1.0 },
+    { url: `${SITE_URL}/quote`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${SITE_URL}/creators`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
     ...creatorEntries,
     { url: `${SITE_URL}/how-scoring-works`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },

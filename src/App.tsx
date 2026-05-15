@@ -612,7 +612,15 @@ function CreatorDetail({ c, onBack }: { c: typeof creators[0]; onBack: () => voi
 function ClientCreatorsPage() {
   const [category, setCategory] = useState("すべて");
   const [sortBy, setSortBy] = useState("おすすめ");
-  const [minScore, setMinScore] = useState<number | undefined>(undefined);
+  // Phase 6: スコア値ではなくランクで絞り込み
+  const [minRank, setMinRank] = useState<"all" | "regular" | "pro" | "elite">("all");
+  const rankToMinScore: Record<typeof minRank, number | undefined> = {
+    all: undefined,
+    regular: 400,
+    pro: 700,
+    elite: 850,
+  };
+  const minScore = rankToMinScore[minRank];
   const [selected, setSelected] = useState<any | null>(null);
 
   const { creators: dbCreators, loading } = useCreators({
@@ -660,19 +668,16 @@ function ClientCreatorsPage() {
           のクリエイターが見つかりました
         </p>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500">スコア:</span>
-          <Select
-            value={minScore ? String(minScore) : "all"}
-            onValueChange={(v) => setMinScore(v === "all" ? undefined : Number(v))}
-          >
-            <SelectTrigger className="w-28 text-xs border-gray-300 bg-white h-9">
+          <span className="text-xs text-gray-500">ランク:</span>
+          <Select value={minRank} onValueChange={(v) => setMinRank(v as typeof minRank)}>
+            <SelectTrigger className="w-32 text-xs border-gray-300 bg-white h-9">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all" className="text-xs">すべて</SelectItem>
-              <SelectItem value="500" className="text-xs">500以上</SelectItem>
-              <SelectItem value="600" className="text-xs">600以上</SelectItem>
-              <SelectItem value="800" className="text-xs">800以上</SelectItem>
+              <SelectItem value="regular" className="text-xs">レギュラー以上</SelectItem>
+              <SelectItem value="pro" className="text-xs">プロ以上</SelectItem>
+              <SelectItem value="elite" className="text-xs">認定クリエイター</SelectItem>
             </SelectContent>
           </Select>
           <span className="text-xs text-gray-500">並び替え:</span>
@@ -719,7 +724,7 @@ function ClientCreatorsPage() {
 // ─── [Client] 案件投稿 ────────────────────────────────────────────────────────
 function ClientPostProject({ onSuccess }: { onSuccess: () => void }) {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ company: "", industry: "", type: "", budget: "", deadline: "", description: "", style: "", proSelect: true, highScoreOnly: false });
+  const [form, setForm] = useState({ company: "", industry: "", type: "", budget: "", deadline: "", description: "", style: "", proSelect: true, highScoreOnly: false, maxRevisions: 2 });
   const upd = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
   const aiHearing = useAIHearing();
 
@@ -819,6 +824,20 @@ function ClientPostProject({ onSuccess }: { onSuccess: () => void }) {
                 ))}
               </div>
             </div>
+            {/* 修正回数 (Phase 4) */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">修正回数 <span className="text-gray-400 ml-1 font-normal">(無料分の上限)</span></Label>
+              <Select value={String(form.maxRevisions)} onValueChange={v => upd("maxRevisions", v === "0" ? 99 : Number(v))}>
+                <SelectTrigger className="border-gray-300 h-9"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">1回</SelectItem>
+                  <SelectItem value="2">2回（推奨）</SelectItem>
+                  <SelectItem value="3">3回</SelectItem>
+                  <SelectItem value="0">無制限（追加料金あり）</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-gray-500 mt-1">これを超える修正は追加料金が発生する場合があります。</p>
+            </div>
             <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${form.proSelect ? "border-blue-600 bg-blue-50" : "border-gray-200"}`}
               onClick={() => upd("proSelect", !form.proSelect)}>
               <div className="flex items-center gap-3">
@@ -838,8 +857,8 @@ function ClientPostProject({ onSuccess }: { onSuccess: () => void }) {
                   {form.highScoreOnly && <CheckCircle size={12} className="text-white" />}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-800">スコア600以上のクリエイターのみに募集する</p>
-                  <p className="text-xs text-gray-500 mt-0.5">品質シグナルの高いクリエイターに絞って募集します。該当するクリエイターにしか案件が表示されません。</p>
+                  <p className="text-sm font-semibold text-gray-800">プロ以上のクリエイターのみに募集する</p>
+                  <p className="text-xs text-gray-500 mt-0.5">プロ／認定クリエイターランクのみに案件を公開します。該当しないクリエイターには表示されません。</p>
                 </div>
               </div>
             </div>

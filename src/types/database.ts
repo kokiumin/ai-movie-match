@@ -139,6 +139,8 @@ export type Database = {
           view_count: number
           proposal_count: number
           min_creator_score: number
+          max_revisions: number
+          revision_count: number
           completed_at: string | null
           payout_status: 'pending' | 'paid' | 'refunded' | 'disputed'
           payout_completed_at: string | null
@@ -166,6 +168,8 @@ export type Database = {
           view_count?: number
           proposal_count?: number
           min_creator_score?: number
+          max_revisions?: number
+          revision_count?: number
           completed_at?: string | null
           payout_status?: 'pending' | 'paid' | 'refunded' | 'disputed'
           payout_completed_at?: string | null
@@ -193,6 +197,8 @@ export type Database = {
           view_count?: number
           proposal_count?: number
           min_creator_score?: number
+          max_revisions?: number
+          revision_count?: number
           completed_at?: string | null
           payout_status?: 'pending' | 'paid' | 'refunded' | 'disputed'
           payout_completed_at?: string | null

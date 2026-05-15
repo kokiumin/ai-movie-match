@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Star, Award, Shield, ChevronLeft, Clock, MessageCircle } from "lucide-react";
 import { MOCK_CREATORS } from "@/lib/mock-creators";
+import { VerificationBadges } from "@/components/creators/VerificationBadges";
 
 const SITE_URL = "https://www.ai-movie-match.com";
 
@@ -217,6 +218,19 @@ export default async function CreatorPage({ params }: PageProps) {
                 <p>✓ 規定の検収期間内なら全額返金</p>
                 <p>✓ 著作権譲渡標準対応</p>
               </div>
+            </div>
+
+            {/* 本人確認バッジ (Phase 5) */}
+            <div className="mt-4 bg-white border border-gray-200 rounded-xl p-5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
+                本人確認状況
+              </h3>
+              <VerificationBadges
+                emailVerified={true}
+                phoneVerified={true}
+                identityVerified={creator.badge === "認定" || creator.badge === "TOP"}
+                bankAccountVerified={creator.badge === "認定" || creator.badge === "TOP"}
+              />
             </div>
           </aside>
         </div>

@@ -1,0 +1,88 @@
+// Server-safe MOCK creator data (no React hooks).
+// Server Components (e.g. /creators page) と Client hooks (useCreators) の両方で
+// 同じデータを参照するため、純データのみここに置く。
+import type { Profile } from "@/types/database";
+
+const baseFields = {
+  rank: "starter" as const,
+  total_earnings_30d: 0,
+  total_earnings_90d: 0,
+  completed_orders: 0,
+  rank_updated_at: null,
+  score: 0,
+  avg_rating: 0,
+  on_time_delivery_rate: 0,
+  repeat_client_rate: 0,
+  score_updated_at: null,
+  stripe_account_id: null,
+  stripe_connected: false,
+  avatar_url: null,
+  company_name: null,
+  industry: null,
+  role: "creator" as const,
+  created_at: "",
+  updated_at: "",
+};
+
+export const MOCK_CREATORS: Profile[] = [
+  {
+    ...baseFields,
+    id: "1", display_name: "田中 蒼", handle: "@aosora_gen",
+    bio: "生成AI専門クリエイター。中小企業の採用・PR動画を低コストで高速制作します。",
+    specialty: ["採用動画", "会社紹介"], tools: ["Runway", "Sora", "CapCut"],
+    tags: ["採用動画", "会社紹介"], badge: "認定", turnaround: "5〜7日",
+    min_price: 50000, max_price: 150000, rating: 4.9, review_count: 38,
+    delivery_count: 52, monthly_revenue: 420000, active_projects: 3,
+    color: "bg-blue-600",
+  },
+  {
+    ...baseFields,
+    id: "2", display_name: "鈴木 凛", handle: "@rin_aicinema",
+    bio: "SNS向けショート動画が得意。ターゲットに刺さるAI映像を高速納品。",
+    specialty: ["SNS広告", "商品PR"], tools: ["Kling", "HeyGen", "Premiere"],
+    tags: ["SNS広告", "商品PR"], badge: "", turnaround: "3〜5日",
+    min_price: 30000, max_price: 100000, rating: 4.7, review_count: 24,
+    delivery_count: 31, monthly_revenue: 180000, active_projects: 2,
+    color: "bg-emerald-600",
+  },
+  {
+    ...baseFields,
+    id: "3", display_name: "山本 剛", handle: "@gocreate_ai",
+    bio: "元映像ディレクター。AIで単価を下げながら品質を維持。採用動画の実績多数。",
+    specialty: ["採用動画", "研修コンテンツ"], tools: ["Sora", "D-ID", "After Effects"],
+    tags: ["採用動画", "研修・説明"], badge: "認定", turnaround: "7〜10日",
+    min_price: 80000, max_price: 200000, rating: 4.8, review_count: 41,
+    delivery_count: 67, monthly_revenue: 610000, active_projects: 4,
+    color: "bg-violet-600",
+  },
+  {
+    ...baseFields,
+    id: "4", display_name: "伊藤 美咲", handle: "@misaki_aifilm",
+    bio: "アート系ビジュアルが強み。ブランドイメージを高める映像表現を得意とする。",
+    specialty: ["ブランド動画", "会社紹介"], tools: ["Runway", "Midjourney", "Resolve"],
+    tags: ["ブランド動画", "会社紹介"], badge: "", turnaround: "5〜8日",
+    min_price: 100000, max_price: 250000, rating: 4.6, review_count: 17,
+    delivery_count: 23, monthly_revenue: 320000, active_projects: 2,
+    color: "bg-amber-600",
+  },
+  {
+    ...baseFields,
+    id: "5", display_name: "中村 健", handle: "@ken_aigiga",
+    bio: "業界最多実績。どんな業種でも対応できる汎用力と圧倒的スピードが強み。",
+    specialty: ["採用動画", "SNS広告", "会社紹介"], tools: ["Kling", "Sora", "Runway"],
+    tags: ["採用動画", "SNS広告", "会社紹介"], badge: "TOP", turnaround: "4〜6日",
+    min_price: 50000, max_price: 180000, rating: 4.9, review_count: 56,
+    delivery_count: 89, monthly_revenue: 780000, active_projects: 5,
+    color: "bg-rose-600",
+  },
+  {
+    ...baseFields,
+    id: "6", display_name: "林 奈津子", handle: "@natsu_aiworks",
+    bio: "食品・コスメ・アパレルのSNS広告専門。短納期・低価格が強み。",
+    specialty: ["商品PR", "SNS広告"], tools: ["Kling", "CapCut", "HeyGen"],
+    tags: ["商品PR", "SNS広告"], badge: "", turnaround: "2〜4日",
+    min_price: 20000, max_price: 80000, rating: 4.5, review_count: 12,
+    delivery_count: 18, monthly_revenue: 140000, active_projects: 1,
+    color: "bg-pink-600",
+  },
+];

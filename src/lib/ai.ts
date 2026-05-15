@@ -5,8 +5,8 @@
  * the API key server-side. The frontend never sees ANTHROPIC_API_KEY.
  */
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const AI_PROXY_URL = SUPABASE_URL ? `${SUPABASE_URL}/functions/v1/ai` : "";
 
 export const isAIConfigured = () =>

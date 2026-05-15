@@ -1,3 +1,4 @@
+"use client";
 import { useState, useRef } from "react";
 import { useAuth, useDemoRole } from "@/contexts/AuthContext";
 import { LoginDialog } from "@/components/auth/LoginDialog";
@@ -23,7 +24,7 @@ import { GigCard } from "@/components/creators/GigCard";
 import { CategoryNav } from "@/components/creators/CategoryNav";
 import { PackageTiers } from "@/components/creators/PackageTiers";
 import { FeeCalculator } from "@/components/creators/FeeCalculator";
-import { CreatorMyPage } from "@/pages/CreatorMyPage";
+import { CreatorMyPage } from "@/page-modules/CreatorMyPage";
 import { useCreators } from "@/hooks/useCreators";
 import { useCreatorRank } from "@/hooks/useCreatorRank";
 import { Button } from "@/components/ui/button";

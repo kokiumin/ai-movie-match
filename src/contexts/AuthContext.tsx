@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import type { Profile, UserRole } from "@/types/database";
@@ -238,8 +239,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const updateProfile = useCallback(
     async (data: Partial<Profile>) => {
       if (!state.user) return { error: "Not authenticated" };
-      const { error } = await supabase
-        .from("profiles")
+      const { error } = await (supabase.from("profiles") as any)
         .update({ ...data, updated_at: new Date().toISOString() })
         .eq("id", state.user.id);
       if (!error) {

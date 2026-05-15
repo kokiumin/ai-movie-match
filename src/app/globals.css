@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Phase 8 minimum: iOS Safariの自動ズーム防止 (入力欄16px未満で発火) */
+@media (max-width: 640px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+/* タップターゲット最小44px推奨 */
+@layer components {
+  .min-tap {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* セーフエリア (iPhone X以降) */
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
 @layer base {
   :root {
     --background: 0 0% 100%;

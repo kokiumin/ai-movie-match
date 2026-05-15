@@ -24,6 +24,9 @@ import { GigCard } from "@/components/creators/GigCard";
 import { CategoryNav } from "@/components/creators/CategoryNav";
 import { PackageTiers } from "@/components/creators/PackageTiers";
 import { FeeCalculator } from "@/components/creators/FeeCalculator";
+import { ConsultationModal } from "@/components/consultations/ConsultationModal";
+import { ConsultationList } from "@/components/consultations/ConsultationList";
+import { ProjectStepBar } from "@/components/projects/ProjectStepBar";
 import { CreatorMyPage } from "@/page-modules/CreatorMyPage";
 import { useCreators } from "@/hooks/useCreators";
 import { useCreatorRank } from "@/hooks/useCreatorRank";
@@ -392,6 +395,8 @@ function SidebarFilter({ selectedTools, setSelectedTools, priceRange, setPriceRa
 function CreatorDetail({ c, onBack }: { c: typeof creators[0]; onBack: () => void }) {
   const [sent, setSent] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "portfolio" | "reviews">("overview");
+  const [consultOpen, setConsultOpen] = useState(false);
+  const [consultSent, setConsultSent] = useState(false);
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -508,8 +513,20 @@ function CreatorDetail({ c, onBack }: { c: typeof creators[0]; onBack: () => voi
                   updated_at: "",
                 } as any}
                 onOrder={() => setSent(true)}
-                onContact={() => setSent(true)}
+                onContact={() => setConsultOpen(true)}
                 sent={sent}
+              />
+              {consultSent && (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-md px-4 py-3 text-sm text-emerald-700 flex items-center gap-2 font-semibold">
+                  <CheckCircle size={15} /> 相談を送信しました
+                </div>
+              )}
+              <ConsultationModal
+                creatorId={String(c.id)}
+                creatorName={c.name}
+                open={consultOpen}
+                onClose={() => setConsultOpen(false)}
+                onSent={() => setConsultSent(true)}
               />
               <div className="bg-brand-50 border border-brand-200 rounded-lg p-3 text-xs text-gray-700">
                 <p className="font-semibold mb-1 flex items-center gap-1 text-brand-700"><Shield size={11} />プロ選定サービス</p>
@@ -1216,6 +1233,10 @@ function MessagingPage() {
             <p className="text-sm font-semibold text-gray-800">{thread.name}</p>
             <p className="text-[10px] text-gray-400">オンライン</p>
           </div>
+        </div>
+        {/* Phase 3: 案件単位ステップ進捗バー */}
+        <div className="px-5 pt-3">
+          <ProjectStepBar currentStep="revision" revisionCount={1} maxRevisions={2} />
         </div>
         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
           {msgs.map(m => (

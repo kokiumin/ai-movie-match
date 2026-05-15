@@ -11,6 +11,7 @@ import { ScoreCircle } from "@/components/creators/ScoreCircle";
 import { BadgeShowcase } from "@/components/creators/BadgeShowcase";
 import { NextBadgeHint } from "@/components/creators/NextBadgeHint";
 import { useCreatorScore } from "@/hooks/useCreatorScore";
+import { ConsultationList } from "@/components/consultations/ConsultationList";
 import { DEMO_CREATOR } from "../types";
 
 function BadgeEl({ type }: { type: string }) {
@@ -107,7 +108,10 @@ export function Overview({ creatorId }: OverviewTabProps) {
 
       <ScoreChart creatorId={creatorId} />
 
-      {/* ② ランクダッシュボード */}
+      {/* ② 相談メッセージ (Phase 2) */}
+      <ConsultationList perspective="creator" />
+
+      {/* ③ ランクダッシュボード */}
       <RankDashboard creatorId={creatorId} />
 
       {/* ② プロフィール */}

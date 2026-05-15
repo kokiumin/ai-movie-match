@@ -726,6 +726,32 @@ export type ClientCreatorRelation = Database['public']['Tables']['client_creator
 export type CreatorBadge = Database['public']['Tables']['creator_badges']['Row']
 export type CreatorScoreHistory = Database['public']['Tables']['creator_score_history']['Row']
 
+// 相談機能 (Phase 2)
+export interface ConsultationThread {
+  id: string
+  client_id: string
+  creator_id: string
+  initial_message: string
+  budget_range: string | null
+  deadline_range: string | null
+  status: 'open' | 'replied' | 'converted' | 'closed'
+  converted_project_id: string | null
+  client_unread_count: number
+  creator_unread_count: number
+  last_message_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface ConsultationMessage {
+  id: string
+  thread_id: string
+  sender_id: string
+  message: string
+  is_read: boolean
+  created_at: string
+}
+
 // Enum type aliases
 export type UserRole = 'client' | 'creator' | 'admin'
 export type CreatorRank = 'starter' | 'regular' | 'pro' | 'elite'
